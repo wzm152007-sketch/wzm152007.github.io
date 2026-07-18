@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ÉCHELON 7 — Pizzeria Artisanale | Livraison & Click&Collect</title>
+<meta name="description" content="ÉCHELON 7, pizzeria artisanale haut de gamme. Commandez en ligne : livraison à domicile ou retrait sur place. Pizzas au feu de bois, ingrédients d'exception.">
+<meta name="keywords" content="pizzeria, pizza artisanale, livraison pizza, click and collect, pizza feu de bois">
+<meta property="og:title" content="ÉCHELON 7 — Pizzeria Artisanale">
+<meta property="og:description" content="Commandez en ligne : livraison à domicile ou retrait sur place. Pizzas artisanales au feu de bois.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#0A0A0A">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍕</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,600&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Restaurant",
+  "name": "ÉCHELON 7",
+  "servesCuisine": "Pizza, Italien",
+  "priceRange": "€€",
+  "address": {"@type": "PostalAddress", "streetAddress": "12 Rue des Artisans", "addressLocality": "Paris", "postalCode": "75011", "addressCountry": "FR"},
+  "telephone": "+33123456789",
+  "openingHours": ["Tu-Su 11:30-14:30", "Tu-Su 18:00-22:30"],
+  "acceptsReservations": "True"
+}
+</script>
+<style>
+/* ═══════════ RESET & VARIABLES ═══════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+:root{
+  --noir:#0A0A0A;
+  --noir2:#141414;
+  --noir3:#1E1E1E;
+  --or:#C9A227;
+  --or-clair:#E5C558;
+  --or-sombre:#9A7B1C;
+  --blanc:#FFFFFF;
+  --ivoire:#FAF7F0;
+  --gris:#8A8A8A;
+  --gris-clair:#E8E4DC;
+  --vert:#2E9E5B;
+  --rouge:#D64541;
+  --radius:14px;
+  --shadow:0 10px 40px rgba(0,0,0,.12);
+  --trans:all .3s cubic-bezier(.25,.8,.25,1);
+}
+body{font-family:'Jost',sans-serif;background:var(--ivoire);color:var(--noir);overflow-x:hidden;line-height:1.6}
+h1,h2,h3,.serif{font-family:'Playfair Display',serif}
+img{max-width:100%}
+button{font-family:inherit;cursor:pointer}
+input,select,textarea{font-family:inherit;font-size:1rem}
+::selection{background:var(--or);color:var(--noir)}
+::-webkit-scrollbar{width:9px}
+::-webkit-scrollbar-track{background:var(--noir2)}
+::-webkit-scrollbar-thumb{background:var(--or-sombre);border-radius:5px}
+
+/* ═══════════ TOP BAR ═══════════ */
+.top-bar{background:var(--noir);color:var(--gris-clair);font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;text-align:center}
+.top-bar b{color:var(--or)}
+
+/* ═══════════ NAV ═══════════ */
+nav{position:sticky;top:0;z-index:900;background:rgba(10,10,10,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(201,162,39,.25);display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:64px}
+.nav-logo{font-family:'Playfair Display',serif;font-weight:900;font-size:1.5rem;letter-spacing:.12em;color:var(--blanc);text-decoration:none;white-space:nowrap}
+.nav-logo span{color:var(--or)}
+.nav-links{display:flex;gap:30px;list-style:none}
+.nav-links a{color:var(--gris-clair);text-decoration:none;font-size:.85rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;transition:var(--trans);position:relative}
+.nav-links a::after{content:'';position:absolute;left:0;bottom:-6px;width:0;height:2px;background:var(--or);transition:var(--trans)}
+.nav-links a:hover{color:var(--or)}
+.nav-links a:hover::after{width:100%}
+.nav-actions{display:flex;align-items:center;gap:12px}
+.btn-icon{background:transparent;border:1px solid rgba(255,255,255,.25);color:var(--blanc);width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;transition:var(--trans);position:relative}
+.btn-icon:hover{border-color:var(--or);color:var(--or)}
+.cart-count{position:absolute;top:-5px;right:-5px;background:var(--or);color:var(--noir);font-size:.68rem;font-weight:700;min-width:19px;height:19px;border-radius:10px;display:flex;align-items:center;justify-content:center;padding:0 4px}
+.btn-order-nav{background:var(--or);color:var(--noir);border:none;padding:11px 24px;border-radius:30px;font-weight:600;font-size:.85rem;letter-spacing:.1em;text-transform:uppercase;transition:var(--trans)}
+.btn-order-nav:hover{background:var(--or-clair);transform:translateY(-2px);box-shadow:0 8px 20px rgba(201,162,39,.35)}
+.hamburger{display:none;background:none;border:none;flex-direction:column;gap:5px;padding:8px}
+.hamburger span{display:block;width:24px;height:2px;background:var(--blanc);transition:var(--trans)}
+.hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.hamburger.open span:nth-child(2){opacity:0}
+.hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.mobile-menu{position:fixed;inset:64px 0 0 0;background:var(--noir);z-index:850;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;transform:translateX(100%);transition:transform .35s cubic-bezier(.25,.8,.25,1)}
+.mobile-menu.open{transform:translateX(0)}
+.mobile-menu a{color:var(--blanc);text-decoration:none;font-family:'Playfair Display',serif;font-size:1.7rem;padding:12px;transition:var(--trans)}
+.mobile-menu a:hover{color:var(--or)}
+
+/* ═══════════ HERO ═══════════ */
+.hero{min-height:92vh;background:radial-gradient(ellipse at 70% 20%,#2a2410 0%,var(--noir) 55%);display:flex;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden;padding:60px 20px}
+.hero::before{content:'';position:absolute;width:600px;height:600px;border:1px solid rgba(201,162,39,.15);border-radius:50%;animation:pulse-ring 6s ease-in-out infinite}
+.hero::after{content:'';position:absolute;width:850px;height:850px;border:1px solid rgba(201,162,39,.08);border-radius:50%;animation:pulse-ring 6s ease-in-out infinite 1.2s}
+@keyframes pulse-ring{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(1.06);opacity:1}}
+.hero-content{position:relative;z-index:2;max-width:820px}
+.hero-badge{display:inline-block;border:1px solid var(--or);color:var(--or);font-size:.75rem;letter-spacing:.3em;text-transform:uppercase;padding:8px 22px;border-radius:30px;margin-bottom:28px;animation:fadeUp .8s ease both}
+.hero h1{color:var(--blanc);font-size:clamp(2.8rem,8vw,5.5rem);font-weight:900;line-height:1.05;margin-bottom:20px;animation:fadeUp .8s .15s ease both}
+.hero h1 em{color:var(--or);font-style:italic}
+.hero p{color:var(--gris-clair);font-size:clamp(1rem,2.2vw,1.25rem);font-weight:300;max-width:560px;margin:0 auto 38px;animation:fadeUp .8s .3s ease both}
+.hero-ctas{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;animation:fadeUp .8s .45s ease both}
+.btn-gold{background:linear-gradient(135deg,var(--or),var(--or-sombre));color:var(--noir);border:none;padding:16px 38px;border-radius:34px;font-weight:600;font-size:1rem;letter-spacing:.08em;text-transform:uppercase;transition:var(--trans);text-decoration:none;display:inline-flex;align-items:center;gap:10px}
+.btn-gold:hover{transform:translateY(-3px);box-shadow:0 14px 34px rgba(201,162,39,.4)}
+.btn-ghost{background:transparent;color:var(--blanc);border:1px solid rgba(255,255,255,.35);padding:16px 38px;border-radius:34px;font-weight:500;font-size:1rem;letter-spacing:.08em;text-transform:uppercase;transition:var(--trans);text-decoration:none;display:inline-flex;align-items:center;gap:10px}
+.btn-ghost:hover{border-color:var(--or);color:var(--or)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+.hero-scroll{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);color:var(--gris);font-size:.72rem;letter-spacing:.28em;text-transform:uppercase;animation:bob 2s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,8px)}}
+
+/* ═══════════ SECTIONS ═══════════ */
+section{padding:90px 20px}
+.container{max-width:1180px;margin:0 auto}
+.sec-head{text-align:center;margin-bottom:56px}
+.sec-tag{color:var(--or-sombre);font-size:.78rem;letter-spacing:.3em;text-transform:uppercase;font-weight:600}
+.sec-head h2{font-size:clamp(2rem,5vw,3.2rem);font-weight:800;margin-top:10px}
+.sec-head p{color:var(--gris);max-width:520px;margin:12px auto 0}
+.reveal{opacity:0;transform:translateY(34px);transition:opacity .7s ease,transform .7s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* ═══════════ MENU ═══════════ */
+.menu-tabs{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:44px}
+.menu-tab{background:transparent;border:1px solid var(--gris-clair);color:var(--noir);padding:11px 26px;border-radius:30px;font-weight:500;font-size:.9rem;letter-spacing:.06em;text-transform:uppercase;transition:var(--trans)}
+.menu-tab.active,.menu-tab:hover{background:var(--noir);color:var(--or);border-color:var(--noir)}
+.menu-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:26px}
+.prod-card{background:var(--blanc);border-radius:var(--radius);overflow:hidden;box-shadow:0 4px 18px rgba(0,0,0,.06);transition:var(--trans);display:flex;flex-direction:column}
+.prod-card:hover{transform:translateY(-7px);box-shadow:var(--shadow)}
+.prod-img{height:170px;display:flex;align-items:center;justify-content:center;font-size:4.2rem;background:linear-gradient(135deg,var(--noir2),var(--noir3));position:relative}
+.prod-badge{position:absolute;top:12px;left:12px;background:var(--or);color:var(--noir);font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:5px 12px;border-radius:20px}
+.prod-body{padding:20px;flex:1;display:flex;flex-direction:column}
+.prod-body h3{font-size:1.25rem;font-weight:700}
+.prod-body .desc{color:var(--gris);font-size:.88rem;margin:6px 0 14px;flex:1}
+.prod-foot{display:flex;align-items:center;justify-content:space-between}
+.prod-price{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700}
+.prod-price small{font-size:.75rem;color:var(--gris);font-family:'Jost',sans-serif;font-weight:400}
+.btn-add{background:var(--noir);color:var(--or);border:none;padding:10px 20px;border-radius:24px;font-weight:600;font-size:.82rem;letter-spacing:.08em;text-transform:uppercase;transition:var(--trans)}
+.btn-add:hover{background:var(--or);color:var(--noir)}
+.prod-card.soldout{opacity:.55}
+.prod-card.soldout .btn-add{background:var(--gris-clair);color:var(--gris);pointer-events:none}
+
+/* ═══════════ NOUS TROUVER ═══════════ */
+.find-section{background:var(--noir);color:var(--blanc)}
+.find-section .sec-head h2{color:var(--blanc)}
+.find-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:36px;align-items:stretch}
+.map-wrap{border-radius:var(--radius);overflow:hidden;min-height:380px;border:1px solid rgba(201,162,39,.3)}
+.map-wrap iframe{width:100%;height:100%;min-height:380px;border:0;filter:grayscale(30%)}
+.find-info{background:var(--noir2);border:1px solid rgba(201,162,39,.25);border-radius:var(--radius);padding:34px;display:flex;flex-direction:column;gap:20px}
+.find-row{display:flex;gap:14px;align-items:flex-start}
+.find-row .ico{font-size:1.4rem;width:44px;height:44px;background:rgba(201,162,39,.12);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.find-row h4{color:var(--or);font-family:'Jost',sans-serif;font-size:.78rem;letter-spacing:.2em;text-transform:uppercase;margin-bottom:3px}
+.find-row p{color:var(--gris-clair);font-size:.95rem}
+.find-btns{display:flex;gap:12px;flex-wrap:wrap;margin-top:auto}
+.btn-waze{background:#33CCFF;color:#0A2540;border:none;padding:13px 22px;border-radius:28px;font-weight:600;font-size:.88rem;display:inline-flex;align-items:center;gap:8px;text-decoration:none;transition:var(--trans)}
+.btn-gmaps{background:var(--blanc);color:var(--noir);border:none;padding:13px 22px;border-radius:28px;font-weight:600;font-size:.88rem;display:inline-flex;align-items:center;gap:8px;text-decoration:none;transition:var(--trans)}
+.btn-waze:hover,.btn-gmaps:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.3)}
+
+/* ═══════════ ENGAGEMENTS ═══════════ */
+.perks{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:24px}
+.perk{background:var(--blanc);border-radius:var(--radius);padding:32px 26px;text-align:center;box-shadow:0 4px 18px rgba(0,0,0,.05);transition:var(--trans)}
+.perk:hover{transform:translateY(-6px);box-shadow:var(--shadow)}
+.perk .ico{font-size:2.4rem;margin-bottom:14px}
+.perk h3{font-size:1.15rem;margin-bottom:8px}
+.perk p{color:var(--gris);font-size:.88rem}
+
+/* ═══════════ FOOTER ═══════════ */
+footer{background:var(--noir);color:var(--gris);padding:60px 20px 110px;border-top:1px solid rgba(201,162,39,.2)}
+.foot-grid{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:36px}
+.foot-logo{font-family:'Playfair Display',serif;font-weight:900;font-size:1.6rem;color:var(--blanc);letter-spacing:.1em}
+.foot-logo span{color:var(--or)}
+footer h4{color:var(--blanc);font-size:.82rem;letter-spacing:.2em;text-transform:uppercase;margin-bottom:16px}
+footer ul{list-style:none}
+footer li{margin-bottom:9px}
+footer a{color:var(--gris);text-decoration:none;font-size:.9rem;transition:var(--trans)}
+footer a:hover{color:var(--or)}
+.foot-bottom{max-width:1180px;margin:44px auto 0;padding-top:22px;border-top:1px solid #222;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:.8rem}
+
+/* ═══════════ FLOATING BUTTONS ═══════════ */
+.fab-stack{position:fixed;right:16px;bottom:96px;z-index:800;display:flex;flex-direction:column;gap:12px}
+.fab{width:52px;height:52px;border-radius:50%;border:none;display:flex;align-items:center;justify-content:center;font-size:1.4rem;color:#fff;box-shadow:0 8px 24px rgba(0,0,0,.3);transition:var(--trans);text-decoration:none}
+.fab:hover{transform:scale(1.1)}
+.fab-call{background:var(--noir);border:1px solid var(--or);color:var(--or)}
+.fab-wa{background:#25D366}
+.fab-waze{background:#33CCFF;color:#0A2540}
+.fab-order{position:fixed;left:16px;right:84px;bottom:16px;z-index:800;background:linear-gradient(135deg,var(--or),var(--or-sombre));color:var(--noir);border:none;padding:16px;border-radius:32px;font-weight:700;font-size:1rem;letter-spacing:.08em;text-transform:uppercase;box-shadow:0 10px 30px rgba(201,162,39,.45);display:none;align-items:center;justify-content:center;gap:10px}
+.fab-cart-mini{position:fixed;right:16px;bottom:16px;z-index:800;width:56px;height:56px;border-radius:50%;background:var(--noir);border:1px solid var(--or);color:var(--or);font-size:1.4rem;display:none;align-items:center;justify-content:center}
+
+/* ═══════════ DRAWERS & MODALS ═══════════ */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(3px);z-index:950;opacity:0;pointer-events:none;transition:opacity .3s}
+.overlay.open{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(440px,100vw);background:var(--ivoire);z-index:960;transform:translateX(100%);transition:transform .38s cubic-bezier(.25,.8,.25,1);display:flex;flex-direction:column}
+.drawer.open{transform:translateX(0)}
+.drawer-head{background:var(--noir);color:var(--blanc);padding:20px 24px;display:flex;align-items:center;justify-content:space-between}
+.drawer-head h3{font-size:1.3rem}
+.drawer-head h3 span{color:var(--or)}
+.btn-close{background:none;border:none;color:inherit;font-size:1.6rem;line-height:1}
+.drawer-body{flex:1;overflow-y:auto;padding:20px}
+.drawer-foot{padding:18px 20px;background:var(--blanc);border-top:1px solid var(--gris-clair)}
+
+.modal{position:fixed;inset:0;z-index:970;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity .3s}
+.modal.open{opacity:1;pointer-events:auto}
+.modal-card{background:var(--blanc);border-radius:18px;width:min(520px,100%);max-height:92vh;overflow-y:auto;transform:translateY(24px);transition:transform .3s;box-shadow:0 30px 80px rgba(0,0,0,.35)}
+.modal.open .modal-card{transform:translateY(0)}
+.modal-head{background:var(--noir);color:var(--blanc);padding:20px 26px;display:flex;justify-content:space-between;align-items:center;border-radius:18px 18px 0 0;position:sticky;top:0;z-index:5}
+.modal-head h3{font-size:1.25rem}
+.modal-body{padding:24px 26px}
+
+/* forms */
+.form-group{margin-bottom:16px}
+.form-group label{display:block;font-size:.78rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--gris);margin-bottom:6px}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:12px 14px;border:1px solid var(--gris-clair);border-radius:10px;background:var(--ivoire);transition:var(--trans)}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--or);box-shadow:0 0 0 3px rgba(201,162,39,.15)}
+.opt-row{display:flex;gap:10px;flex-wrap:wrap}
+.opt-chip{border:1.5px solid var(--gris-clair);background:var(--blanc);border-radius:12px;padding:10px 14px;font-size:.88rem;transition:var(--trans);flex:1;min-width:90px;text-align:center}
+.opt-chip small{display:block;color:var(--gris);font-size:.72rem}
+.opt-chip.sel{border-color:var(--or);background:rgba(201,162,39,.1);font-weight:600}
+.ing-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.ing-chip{display:flex;justify-content:space-between;align-items:center;border:1.5px solid var(--gris-clair);background:var(--blanc);border-radius:10px;padding:9px 12px;font-size:.85rem;transition:var(--trans)}
+.ing-chip.sel{border-color:var(--or);background:rgba(201,162,39,.1);font-weight:600}
+.qty-ctrl{display:flex;align-items:center;gap:14px}
+.qty-ctrl button{width:38px;height:38px;border-radius:50%;border:1.5px solid var(--noir);background:var(--blanc);font-size:1.2rem;font-weight:600;transition:var(--trans)}
+.qty-ctrl button:hover{background:var(--noir);color:var(--or)}
+.qty-ctrl .qv{font-size:1.2rem;font-weight:700;min-width:26px;text-align:center}
+.btn-full{width:100%;background:linear-gradient(135deg,var(--or),var(--or-sombre));color:var(--noir);border:none;padding:15px;border-radius:30px;font-weight:700;font-size:.95rem;letter-spacing:.08em;text-transform:uppercase;transition:var(--trans)}
+.btn-full:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(201,162,39,.4)}
+.btn-full.dark{background:var(--noir);color:var(--or)}
+.btn-full:disabled{opacity:.5;pointer-events:none}
+
+/* cart */
+.cart-item{background:var(--blanc);border-radius:12px;padding:14px;margin-bottom:12px;display:flex;gap:12px;box-shadow:0 2px 10px rgba(0,0,0,.05)}
+.cart-item .emo{font-size:2rem}
+.cart-item .ci-body{flex:1}
+.cart-item h4{font-size:1rem}
+.cart-item .ci-meta{font-size:.78rem;color:var(--gris)}
+.cart-item .ci-foot{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+.ci-qty{display:flex;align-items:center;gap:10px}
+.ci-qty button{width:26px;height:26px;border-radius:50%;border:1px solid var(--gris-clair);background:var(--ivoire);font-weight:700}
+.ci-price{font-weight:700}
+.ci-del{background:none;border:none;color:var(--rouge);font-size:.78rem;text-decoration:underline}
+.totals-line{display:flex;justify-content:space-between;font-size:.92rem;margin-bottom:6px;color:var(--gris)}
+.totals-line.grand{font-size:1.25rem;font-weight:700;color:var(--noir);border-top:1px solid var(--gris-clair);padding-top:10px;margin-top:8px}
+.totals-line.grand b{font-family:'Playfair Display',serif}
+.promo-row{display:flex;gap:8px;margin:10px 0}
+.promo-row input{flex:1;padding:10px 12px;border:1px solid var(--gris-clair);border-radius:10px;text-transform:uppercase}
+.promo-row button{background:var(--noir);color:var(--or);border:none;border-radius:10px;padding:0 18px;font-weight:600}
+.promo-ok{color:var(--vert);font-size:.82rem;font-weight:600}
+
+/* checkout mode */
+.mode-switch{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+.mode-btn{border:1.5px solid var(--gris-clair);background:var(--blanc);border-radius:14px;padding:16px 10px;text-align:center;transition:var(--trans)}
+.mode-btn .ico{font-size:1.6rem;display:block;margin-bottom:4px}
+.mode-btn.sel{border-color:var(--or);background:rgba(201,162,39,.1);font-weight:600}
+.pay-grid{display:grid;gap:10px;margin-top:8px}
+.pay-opt{display:flex;align-items:center;gap:12px;border:1.5px solid var(--gris-clair);background:var(--blanc);border-radius:12px;padding:13px 16px;transition:var(--trans);font-size:.95rem}
+.pay-opt.sel{border-color:var(--or);background:rgba(201,162,39,.1);font-weight:600}
+.pay-opt .pi{font-size:1.3rem;width:32px;text-align:center}
+
+/* tracking */
+.track-steps{display:flex;flex-direction:column;gap:0;margin:20px 0}
+.tstep{display:flex;gap:16px;position:relative;padding-bottom:26px}
+.tstep:last-child{padding-bottom:0}
+.tstep::before{content:'';position:absolute;left:17px;top:36px;bottom:0;width:2px;background:var(--gris-clair)}
+.tstep:last-child::before{display:none}
+.tstep .dot{width:36px;height:36px;border-radius:50%;background:var(--gris-clair);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;z-index:1;transition:var(--trans)}
+.tstep.done .dot{background:var(--vert);color:#fff}
+.tstep.active .dot{background:var(--or);color:var(--noir);animation:glowPulse 1.6s ease-in-out infinite}
+.tstep.done::before{background:var(--vert)}
+@keyframes glowPulse{0%,100%{box-shadow:0 0 0 0 rgba(201,162,39,.5)}50%{box-shadow:0 0 0 10px rgba(201,162,39,0)}}
+.tstep h4{font-size:.98rem}
+.tstep p{font-size:.8rem;color:var(--gris)}
+.track-bar{height:8px;background:var(--gris-clair);border-radius:5px;overflow:hidden;margin:14px 0}
+.track-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--or),var(--or-clair));border-radius:5px;transition:width .8s ease}
+.eta-box{background:var(--noir);color:var(--blanc);border-radius:14px;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.eta-box b{color:var(--or);font-size:1.35rem;font-family:'Playfair Display',serif}
+
+/* toast */
+#toasts{position:fixed;top:78px;right:16px;z-index:1200;display:flex;flex-direction:column;gap:10px}
+.toast{background:var(--noir);color:var(--blanc);border-left:3px solid var(--or);border-radius:10px;padding:13px 18px;font-size:.88rem;box-shadow:0 10px 30px rgba(0,0,0,.35);animation:slideIn .35s ease,fadeOut .4s ease 4s forwards;max-width:320px}
+@keyframes slideIn{from{transform:translateX(110%)}to{transform:translateX(0)}}
+@keyframes fadeOut{to{opacity:0;transform:translateX(110%)}}
+
+/* cookie banner */
+.cookie-banner{position:fixed;left:16px;right:16px;bottom:16px;z-index:940;background:var(--noir);color:var(--gris-clair);border:1px solid rgba(201,162,39,.35);border-radius:16px;padding:20px;max-width:520px;margin:0 auto;box-shadow:0 20px 60px rgba(0,0,0,.5);display:none}
+.cookie-banner.show{display:block;animation:fadeUp .5s ease}
+.cookie-banner p{font-size:.85rem;margin-bottom:14px}
+.cookie-banner a{color:var(--or)}
+.cookie-btns{display:flex;gap:10px}
+.cookie-btns button{flex:1;padding:11px;border-radius:24px;font-weight:600;font-size:.85rem;border:none}
+.ck-accept{background:var(--or);color:var(--noir)}
+.ck-refuse{background:transparent;border:1px solid var(--gris)!important;color:var(--gris-clair)}
+
+.hidden{display:none!important}
+.tag-vege{font-size:.7rem;background:rgba(46,158,91,.12);color:var(--vert);padding:3px 10px;border-radius:12px;font-weight:600}
+
+/* ═══════════ RESPONSIVE ═══════════ */
+@media(max-width:900px){
+  .find-grid{grid-template-columns:1fr}
+  .foot-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:760px){
+  .nav-links{display:none}
+  .btn-order-nav{display:none}
+  .hamburger{display:flex}
+  .fab-order{display:flex}
+  .fab-cart-mini{display:flex}
+  .fab-stack{bottom:150px}
+  section{padding:64px 16px}
+  .ing-grid{grid-template-columns:1fr}
+  footer{padding-bottom:150px}
+}
+</style>
+</head>
+<body>
+
+<div class="top-bar">🍕 Ouvert du mardi au dimanche · 11h30–14h30 / 18h–22h30 · <b>Livraison offerte dès 30€</b></div>
+
+<nav>
+  <a href="#" class="nav-logo">ÉCHELON<span>7</span></a>
+  <ul class="nav-links">
+    <li><a href="#menu">La Carte</a></li>
+    <li><a href="#engagements">La Maison</a></li>
+    <li><a href="#trouver">Nous trouver</a></li>
+  </ul>
+  <div class="nav-actions">
+    <button class="btn-icon" id="btnAccount" title="Mon compte" aria-label="Mon compte">👤</button>
+    <button class="btn-icon" id="btnCart" title="Panier" aria-label="Panier">🛒<span class="cart-count hidden" id="cartCount">0</span></button>
+    <button class="btn-order-nav" onclick="scrollToMenu()">Commander</button>
+    <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#menu">La Carte</a>
+  <a href="#engagements">La Maison</a>
+  <a href="#trouver">Nous trouver</a>
+  <a href="#" id="mobAccount">Mon compte</a>
+</div>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-content">
+    <span class="hero-badge">Pizzeria artisanale · Feu de bois</span>
+    <h1>L'art de la pizza,<br><em>élevé au 7ᵉ échelon</em></h1>
+    <p>Pâte maturée 72h, ingrédients d'exception, cuisson au feu de bois. Commandez en ligne — livraison à domicile ou retrait sur place.</p>
+    <div class="hero-ctas">
+      <a href="#menu" class="btn-gold">🍕 Commander maintenant</a>
+      <a href="#trouver" class="btn-ghost">📍 Nous trouver</a>
+    </div>
+  </div>
+  <div class="hero-scroll">Découvrir ▾</div>
+</header>
+
+<!-- MENU -->
+<section id="menu">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="sec-tag">La Carte</span>
+      <h2>Nos créations</h2>
+      <p>Chaque pizza est personnalisable : taille, pâte et suppléments au choix.</p>
+    </div>
+    <div class="menu-tabs reveal" id="menuTabs"></div>
+    <div class="menu-grid" id="menuGrid"></div>
+  </div>
+</section>
+
+<!-- ENGAGEMENTS -->
+<section id="engagements" style="background:var(--blanc)">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="sec-tag">La Maison</span>
+      <h2>Nos engagements</h2>
+    </div>
+    <div class="perks reveal">
+      <div class="perk"><div class="ico">🔥</div><h3>Feu de bois</h3><p>Cuisson traditionnelle à 450°C pour une pâte légère et croustillante.</p></div>
+      <div class="perk"><div class="ico">🌾</div><h3>Pâte maturée 72h</h3><p>Farine italienne, levain naturel et maturation lente.</p></div>
+      <div class="perk"><div class="ico">🇮🇹</div><h3>Produits d'exception</h3><p>Mozzarella fior di latte, San Marzano AOP, huile d'olive extra vierge.</p></div>
+      <div class="perk"><div class="ico">🚚</div><h3>Livraison rapide</h3><p>Suivi en temps réel, de la préparation jusqu'à votre porte.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- NOUS TROUVER -->
+<section id="trouver" class="find-section">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="sec-tag">Localisation</span>
+      <h2>Nous trouver</h2>
+    </div>
+    <div class="find-grid reveal">
+      <div class="map-wrap">
+        <iframe id="gmapFrame" title="Carte Google Maps" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade" src=""></iframe>
+      </div>
+      <div class="find-info">
+        <div class="find-row"><div class="ico">📍</div><div><h4>Adresse</h4><p id="infoAddress">—</p></div></div>
+        <div class="find-row"><div class="ico">📞</div><div><h4>Téléphone</h4><p><a id="infoPhone" href="#" style="color:inherit;text-decoration:none">—</a></p></div></div>
+        <div class="find-row"><div class="ico">🕐</div><div><h4>Horaires</h4><p id="infoHours">—</p></div></div>
+        <div class="find-btns">
+          <a class="btn-waze" id="btnWaze" target="_blank" rel="noopener">🚗 Ouvrir dans Waze</a>
+          <a class="btn-gmaps" id="btnGmaps" target="_blank" rel="noopener">🗺️ Ouvrir dans Google Maps</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-grid">
+    <div>
+      <div class="foot-logo">ÉCHELON<span>7</span></div>
+      <p style="margin-top:12px;font-size:.9rem;max-width:280px">Pizzeria artisanale haut de gamme. Livraison à domicile & Click&Collect.</p>
+    </div>
+    <div>
+      <h4>Navigation</h4>
+      <ul><li><a href="#menu">La Carte</a></li><li><a href="#engagements">La Maison</a></li><li><a href="#trouver">Nous trouver</a></li></ul>
+    </div>
+    <div>
+      <h4>Commande</h4>
+      <ul><li><a href="#" onclick="scrollToMenu();return false">Commander en ligne</a></li><li><a href="#" id="footTrack">Suivre ma commande</a></li><li><a href="#" id="footAccount">Mon compte</a></li></ul>
+    </div>
+    <div>
+      <h4>Légal</h4>
+      <ul><li><a href="#" id="footPrivacy">Confidentialité (RGPD)</a></li><li><a href="#" id="footCookies">Gérer les cookies</a></li><li><a href="admin.html">Espace admin</a></li></ul>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <span>© 2026 ÉCHELON 7 — Tous droits réservés</span>
+    <span>Fait avec 🔥 et beaucoup de mozzarella</span>
+  </div>
+</footer>
+
+<!-- FLOATING BUTTONS -->
+<div class="fab-stack">
+  <a class="fab fab-call" id="fabCall" href="#" title="Appeler">📞</a>
+  <a class="fab fab-wa" id="fabWa" href="#" target="_blank" rel="noopener" title="WhatsApp">💬</a>
+  <a class="fab fab-waze" id="fabWaze" href="#" target="_blank" rel="noopener" title="Itinéraire Waze">🚗</a>
+</div>
+<button class="fab-order" onclick="scrollToMenu()">🍕 Commander maintenant</button>
+<button class="fab-cart-mini" id="fabCart">🛒<span class="cart-count hidden" id="cartCountM">0</span></button>
+
+<div class="overlay" id="overlay"></div>
+
+<!-- CART DRAWER -->
+<aside class="drawer" id="cartDrawer" aria-label="Panier">
+  <div class="drawer-head"><h3>Votre <span>panier</span></h3><button class="btn-close" data-close>&times;</button></div>
+  <div class="drawer-body" id="cartBody"></div>
+  <div class="drawer-foot" id="cartFoot"></div>
+</aside>
+
+<!-- PRODUCT CUSTOMIZATION MODAL -->
+<div class="modal" id="prodModal">
+  <div class="modal-card">
+    <div class="modal-head"><h3 id="pmTitle">Personnaliser</h3><button class="btn-close" data-close>&times;</button></div>
+    <div class="modal-body" id="pmBody"></div>
+  </div>
+</div>
+
+<!-- CHECKOUT MODAL -->
+<div class="modal" id="checkoutModal">
+  <div class="modal-card">
+    <div class="modal-head"><h3>Finaliser la commande</h3><button class="btn-close" data-close>&times;</button></div>
+    <div class="modal-body" id="checkoutBody"></div>
+  </div>
+</div>
+
+<!-- TRACKING MODAL -->
+<div class="modal" id="trackModal">
+  <div class="modal-card">
+    <div class="modal-head"><h3>Suivi de commande</h3><button class="btn-close" data-close>&times;</button></div>
+    <div class="modal-body" id="trackBody"></div>
+  </div>
+</div>
+
+<!-- ACCOUNT MODAL -->
+<div class="modal" id="accountModal">
+  <div class="modal-card">
+    <div class="modal-head"><h3 id="accTitle">Mon compte</h3><button class="btn-close" data-close>&times;</button></div>
+    <div class="modal-body" id="accBody"></div>
+  </div>
+</div>
+
+<!-- PRIVACY MODAL -->
+<div class="modal" id="privacyModal">
+  <div class="modal-card">
+    <div class="modal-head"><h3>Confidentialité & RGPD</h3><button class="btn-close" data-close>&times;</button></div>
+    <div class="modal-body">
+      <p style="font-size:.92rem;margin-bottom:12px">Vos données (compte, commandes) sont stockées localement sur votre appareil et utilisées uniquement pour le traitement de vos commandes. Conformément au RGPD, vous disposez d'un droit d'accès, de rectification et de suppression.</p>
+      <p style="font-size:.92rem;margin-bottom:16px">Les cookies utilisés sont strictement nécessaires au fonctionnement du panier et de votre session. Aucun traceur publicitaire n'est déposé sans votre consentement.</p>
+      <button class="btn-full dark" onclick="clearMyData()">🗑️ Supprimer mes données locales</button>
+    </div>
+  </div>
+</div>
+
+<!-- COOKIE BANNER -->
+<div class="cookie-banner" id="cookieBanner">
+  <p>🍪 Nous utilisons des cookies essentiels au fonctionnement du site (panier, session). En savoir plus dans notre <a href="#" id="ckPrivacyLink">politique de confidentialité</a>.</p>
+  <div class="cookie-btns">
+    <button class="ck-refuse" id="ckRefuse">Essentiels uniquement</button>
+    <button class="ck-accept" id="ckAccept">Tout accepter</button>
+  </div>
+</div>
+
+<div id="toasts"></div>
+
+<script>
+/* ═════════════════════════════════════════════
+   ÉCHELON 7 — Moteur de commande en ligne
+   Stockage : localStorage (partagé avec admin.html)
+═════════════════════════════════════════════ */
+const LS = {
+  get(k, fb){ try{ const v = localStorage.getItem(k); return v ? JSON.parse(v) : fb; }catch(e){ return fb; } },
+  set(k, v){ localStorage.setItem(k, JSON.stringify(v)); }
+};
+const EUR = n => n.toFixed(2).replace('.', ',') + ' €';
+const uid = () => 'E7-' + Date.now().toString(36).toUpperCase() + Math.random().toString(36).slice(2,5).toUpperCase();
+
+/* ── Données par défaut (modifiables via l'espace admin) ── */
+const DEFAULT_SETTINGS = {
+  name: 'ÉCHELON 7',
+  address: '12 Rue des Artisans, 75011 Paris',
+  lat: 48.8632, lng: 2.3708,
+  phone: '+33 1 23 45 67 89',
+  whatsapp: '33612345678',
+  hours: 'Mar–Dim · 11h30–14h30 / 18h–22h30',
+  freeDeliveryFrom: 30,
+  minOrderDelivery: 15,
+  stripeLink: '',
+  prepMinutes: 20,
+  deliveryMinutes: 25
+};
+const DEFAULT_MENU = [
+  {id:'p1', cat:'pizzas', name:'Margherita', desc:'San Marzano AOP, fior di latte, basilic frais, huile d\'olive', price:9.5, emoji:'🍕', vege:true, badge:'', avail:true},
+  {id:'p2', cat:'pizzas', name:'Regina', desc:'Tomate, mozzarella, jambon blanc, champignons de Paris', price:11.5, emoji:'🍕', vege:false, badge:'', avail:true},
+  {id:'p3', cat:'pizzas', name:'Quattro Formaggi', desc:'Mozzarella, gorgonzola, parmesan 24 mois, chèvre', price:12.5, emoji:'🧀', vege:true, badge:'', avail:true},
+  {id:'p4', cat:'pizzas', name:'Diavola', desc:'Tomate, mozzarella, spianata piccante, miel épicé', price:12, emoji:'🌶️', vege:false, badge:'Populaire', avail:true},
+  {id:'p5', cat:'pizzas', name:'Végétarienne', desc:'Légumes grillés, pesto, roquette, tomates confites', price:11, emoji:'🥬', vege:true, badge:'', avail:true},
+  {id:'p6', cat:'pizzas', name:'Truffe d\'Or', desc:'Crème de truffe, burrata, jambon de Parme 24 mois, roquette', price:16.5, emoji:'✨', vege:false, badge:'Signature', avail:true},
+  {id:'p7', cat:'pizzas', name:'Bufala', desc:'Tomate, mozzarella di bufala DOP, basilic, olive taggiasche', price:13.5, emoji:'🍕', vege:true, badge:'', avail:true},
+  {id:'p8', cat:'pizzas', name:'Calzone Classico', desc:'Chausson garni : jambon, ricotta, mozzarella, champignons', price:12, emoji:'🥟', vege:false, badge:'', avail:true},
+  {id:'b1', cat:'boissons', name:'Coca-Cola 33cl', desc:'Classique ou zéro', price:2.5, emoji:'🥤', vege:true, badge:'', avail:true},
+  {id:'b2', cat:'boissons', name:'San Pellegrino 50cl', desc:'Eau pétillante italienne', price:2.5, emoji:'💧', vege:true, badge:'', avail:true},
+  {id:'b3', cat:'boissons', name:'Limonade artisanale', desc:'Citron pressé, menthe fraîche', price:3.5, emoji:'🍋', vege:true, badge:'', avail:true},
+  {id:'b4', cat:'boissons', name:'Bière italienne 33cl', desc:'Birra Moretti', price:4.5, emoji:'🍺', vege:true, badge:'', avail:true},
+  {id:'d1', cat:'desserts', name:'Tiramisu maison', desc:'Mascarpone, café ristretto, cacao', price:5.5, emoji:'🍰', vege:true, badge:'Populaire', avail:true},
+  {id:'d2', cat:'desserts', name:'Panna Cotta', desc:'Coulis de fruits rouges', price:5, emoji:'🍮', vege:true, badge:'', avail:true},
+  {id:'d3', cat:'desserts', name:'Cannoli Siciliani', desc:'Ricotta, pistaches de Bronte', price:4.5, emoji:'🥐', vege:true, badge:'', avail:true},
+  {id:'d4', cat:'desserts', name:'Fondant chocolat', desc:'Cœur coulant, chocolat 70%', price:6, emoji:'🍫', vege:true, badge:'', avail:true},
+  {id:'s1', cat:'supplements', name:'Burrata entière', desc:'125g de burrata crémeuse en supplément', price:4.5, emoji:'🧀', vege:true, badge:'', avail:true},
+  {id:'s2', cat:'supplements', name:'Sauce piquante maison', desc:'Pot de 50ml', price:1, emoji:'🌶️', vege:true, badge:'', avail:true},
+  {id:'s3', cat:'supplements', name:'Focaccia romarin', desc:'Pain maison à partager', price:4, emoji:'🥖', vege:true, badge:'', avail:true}
+];
+const SIZES = [
+  {id:'S', label:'S · 26cm', mult:0.85},
+  {id:'M', label:'M · 30cm', mult:1},
+  {id:'L', label:'L · 34cm', mult:1.25}
+];
+const DOUGHS = [
+  {id:'classique', label:'Classique', extra:0},
+  {id:'fine', label:'Fine', extra:0},
+  {id:'epaisse', label:'Épaisse', extra:1}
+];
+const EXTRAS = [
+  {id:'mozza', label:'Mozzarella +', price:1.5},
+  {id:'burrata', label:'Burrata', price:3},
+  {id:'jambon', label:'Jambon', price:2},
+  {id:'champ', label:'Champignons', price:1},
+  {id:'roquette', label:'Roquette', price:1},
+  {id:'olives', label:'Olives', price:1},
+  {id:'oeuf', label:'Œuf', price:1},
+  {id:'truffe', label:'Truffe', price:4},
+  {id:'parmesan', label:'Parmesan', price:1.5}
+];
+const DEFAULT_ZONES = [
+  {id:'z1', name:'Zone 1 · 0–2 km', maxKm:2, fee:2},
+  {id:'z2', name:'Zone 2 · 2–5 km', maxKm:5, fee:3.5},
+  {id:'z3', name:'Zone 3 · 5–8 km', maxKm:8, fee:5}
+];
+const DEFAULT_PROMOS = [
+  {code:'BIENVENUE10', type:'percent', value:10, min:0, active:true},
+  {code:'PIZZA5', type:'amount', value:5, min:25, active:true}
+];
+const CATS = [
+  {id:'pizzas', label:'🍕 Pizzas'},
+  {id:'boissons', label:'🥤 Boissons'},
+  {id:'desserts', label:'🍰 Desserts'},
+  {id:'supplements', label:'➕ Suppléments'}
+];
+const STATUS_FLOW = mode => mode === 'livraison'
+  ? [
+      {id:'recue', label:'Commande reçue', ico:'📋', desc:'Nous avons bien reçu votre commande'},
+      {id:'preparation', label:'En préparation', ico:'👨‍🍳', desc:'Nos pizzaïolos préparent votre commande'},
+      {id:'cuisson', label:'En cuisson', ico:'🔥', desc:'Au feu de bois, 450°C'},
+      {id:'livraison', label:'En livraison', ico:'🛵', desc:'Votre livreur est en route'},
+      {id:'livree', label:'Livrée', ico:'✅', desc:'Bon appétit !'}
+    ]
+  : [
+      {id:'recue', label:'Commande reçue', ico:'📋', desc:'Nous avons bien reçu votre commande'},
+      {id:'preparation', label:'En préparation', ico:'👨‍🍳', desc:'Nos pizzaïolos préparent votre commande'},
+      {id:'cuisson', label:'En cuisson', ico:'🔥', desc:'Au feu de bois, 450°C'},
+      {id:'prete', label:'Prête — à retirer', ico:'🛍️', desc:'Votre commande vous attend'},
+      {id:'livree', label:'Récupérée', ico:'✅', desc:'Bon appétit !'}
+    ];
+
+/* ── Seed & state ── */
+function seed(key, val){ if(!localStorage.getItem(key)) LS.set(key, val); }
+seed('e7_settings', DEFAULT_SETTINGS);
+seed('e7_menu', DEFAULT_MENU);
+seed('e7_zones', DEFAULT_ZONES);
+seed('e7_promos', DEFAULT_PROMOS);
+seed('e7_orders', []);
+seed('e7_users', []);
+
+let settings = LS.get('e7_settings', DEFAULT_SETTINGS);
+let menu = LS.get('e7_menu', DEFAULT_MENU);
+let zones = LS.get('e7_zones', DEFAULT_ZONES);
+let cart = LS.get('e7_cart', []);
+let promo = null;
+let currentCat = 'pizzas';
+let checkoutState = { mode:'livraison', zone:null, pay:'cb' };
+
+const $ = id => document.getElementById(id);
+
+/* ═══════════ TOASTS & NOTIFICATIONS ═══════════ */
+function toast(msg){
+  const t = document.createElement('div');
+  t.className = 'toast'; t.innerHTML = msg;
+  $('toasts').appendChild(t);
+  setTimeout(()=>t.remove(), 4600);
+}
+function notify(title, body){
+  toast('<b>' + title + '</b><br>' + body);
+  if('Notification' in window && Notification.permission === 'granted'){
+    try{ new Notification(title, {body}); }catch(e){}
+  }
+}
+function askNotifPermission(){
+  if('Notification' in window && Notification.permission === 'default'){
+    Notification.requestPermission();
+  }
+}
+
+/* ═══════════ CONTACT / LOCALISATION ═══════════ */
+function wazeUrl(){ return 'https://waze.com/ul?ll=' + settings.lat + ',' + settings.lng + '&navigate=yes'; }
+function gmapsUrl(){ return 'https://www.google.com/maps/dir/?api=1&destination=' + settings.lat + ',' + settings.lng; }
+function applySettingsToUI(){
+  $('infoAddress').textContent = settings.address;
+  $('infoPhone').textContent = settings.phone;
+  $('infoPhone').href = 'tel:' + settings.phone.replace(/\s/g,'');
+  $('infoHours').textContent = settings.hours;
+  $('btnWaze').href = wazeUrl();
+  $('btnGmaps').href = gmapsUrl();
+  $('fabCall').href = 'tel:' + settings.phone.replace(/\s/g,'');
+  $('fabWa').href = 'https://wa.me/' + settings.whatsapp + '?text=' + encodeURIComponent('Bonjour ÉCHELON 7, je souhaite passer une commande 🍕');
+  $('fabWaze').href = wazeUrl();
+  $('gmapFrame').src = 'https://maps.google.com/maps?q=' + settings.lat + ',' + settings.lng + '&z=15&output=embed';
+}
+
+/* ═══════════ MENU ═══════════ */
+function renderTabs(){
+  $('menuTabs').innerHTML = CATS.map(c =>
+    '<button class="menu-tab' + (c.id===currentCat?' active':'') + '" data-cat="' + c.id + '">' + c.label + '</button>'
+  ).join('');
+  $('menuTabs').querySelectorAll('.menu-tab').forEach(b =>
+    b.onclick = () => { currentCat = b.dataset.cat; renderTabs(); renderMenu(); }
+  );
+}
+function renderMenu(){
+  const items = menu.filter(p => p.cat === currentCat);
+  $('menuGrid').innerHTML = items.map(p => `
+    <article class="prod-card${p.avail===false?' soldout':''}">
+      <div class="prod-img">${p.emoji||'🍕'}${p.badge?'<span class="prod-badge">'+p.badge+'</span>':''}</div>
+      <div class="prod-body">
+        <h3>${p.name} ${p.vege?'<span class="tag-vege">Végé</span>':''}</h3>
+        <p class="desc">${p.desc}</p>
+        <div class="prod-foot">
+          <div class="prod-price">${EUR(p.price)}${p.cat==='pizzas'?'<small> · taille M</small>':''}</div>
+          <button class="btn-add" data-id="${p.id}">${p.avail===false?'Épuisé':(p.cat==='pizzas'?'Choisir':'Ajouter')}</button>
+        </div>
+      </div>
+    </article>`).join('');
+  $('menuGrid').querySelectorAll('.btn-add').forEach(b =>
+    b.onclick = () => {
+      const p = menu.find(x => x.id === b.dataset.id);
+      if(!p || p.avail===false) return;
+      if(p.cat === 'pizzas') openCustomize(p);
+      else { addToCart({prodId:p.id, name:p.name, emoji:p.emoji, unit:p.price, qty:1, meta:''}); toast('🛒 <b>'+p.name+'</b> ajouté au panier'); }
+    }
+  );
+}
+
+/* ═══════════ PERSONNALISATION PIZZA ═══════════ */
+let custState = null;
+function openCustomize(p){
+  custState = {p, size:'M', dough:'classique', extras:[], qty:1, comment:''};
+  $('pmTitle').textContent = p.name;
+  renderCustomize();
+  openModal('prodModal');
+}
+function custPrice(){
+  const s = SIZES.find(x=>x.id===custState.size);
+  const d = DOUGHS.find(x=>x.id===custState.dough);
+  const ex = custState.extras.reduce((t,id)=>t + EXTRAS.find(e=>e.id===id).price, 0);
+  return (custState.p.price * s.mult + d.extra + ex) * custState.qty;
+}
+function renderCustomize(){
+  const c = custState;
+  $('pmBody').innerHTML = `
+    <div class="form-group"><label>Taille</label>
+      <div class="opt-row">${SIZES.map(s=>'<button class="opt-chip'+(c.size===s.id?' sel':'')+'" data-k="size" data-v="'+s.id+'">'+s.label+'<small>'+EUR(c.p.price*s.mult)+'</small></button>').join('')}</div>
+    </div>
+    <div class="form-group"><label>Pâte</label>
+      <div class="opt-row">${DOUGHS.map(d=>'<button class="opt-chip'+(c.dough===d.id?' sel':'')+'" data-k="dough" data-v="'+d.id+'">'+d.label+'<small>'+(d.extra?'+'+EUR(d.extra):'inclus')+'</small></button>').join('')}</div>
+    </div>
+    <div class="form-group"><label>Suppléments</label>
+      <div class="ing-grid">${EXTRAS.map(e=>'<button class="ing-chip'+(c.extras.includes(e.id)?' sel':'')+'" data-ex="'+e.id+'"><span>'+e.label+'</span><span>+'+EUR(e.price)+'</span></button>').join('')}</div>
+    </div>
+    <div class="form-group"><label>Commentaire (allergies, cuisson…)</label>
+      <textarea id="custComment" rows="2" placeholder="Ex : bien cuite, sans olives…">${c.comment}</textarea>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin:18px 0">
+      <div class="qty-ctrl"><button id="qMinus">−</button><span class="qv">${c.qty}</span><button id="qPlus">+</button></div>
+      <div class="prod-price" style="font-size:1.5rem">${EUR(custPrice())}</div>
+    </div>
+    <button class="btn-full" id="custAdd">Ajouter au panier · ${EUR(custPrice())}</button>`;
+  $('pmBody').querySelectorAll('.opt-chip').forEach(b => b.onclick = () => { c[b.dataset.k] = b.dataset.v; c.comment = $('custComment').value; renderCustomize(); });
+  $('pmBody').querySelectorAll('.ing-chip').forEach(b => b.onclick = () => {
+    const id = b.dataset.ex;
+    c.extras = c.extras.includes(id) ? c.extras.filter(x=>x!==id) : [...c.extras, id];
+    c.comment = $('custComment').value; renderCustomize();
+  });
+  $('qMinus').onclick = () => { if(c.qty>1){ c.qty--; c.comment=$('custComment').value; renderCustomize(); } };
+  $('qPlus').onclick = () => { c.qty++; c.comment=$('custComment').value; renderCustomize(); };
+  $('custAdd').onclick = () => {
+    c.comment = $('custComment').value.trim();
+    const s = SIZES.find(x=>x.id===c.size), d = DOUGHS.find(x=>x.id===c.dough);
+    const exLabels = c.extras.map(id=>EXTRAS.find(e=>e.id===id).label);
+    addToCart({
+      prodId:c.p.id, name:c.p.name, emoji:c.p.emoji,
+      unit: custPrice()/c.qty, qty:c.qty,
+      meta: [s.label, 'Pâte '+d.label.toLowerCase(), ...exLabels].join(' · ') + (c.comment ? ' — « '+c.comment+' »' : ''),
+      comment: c.comment
+    });
+    closeAll();
+    toast('🛒 <b>'+c.p.name+'</b> ('+s.id+') ajouté au panier');
+  };
+}
+
+/* ═══════════ PANIER ═══════════ */
+function addToCart(item){
+  const same = cart.find(i => i.prodId===item.prodId && i.meta===item.meta);
+  if(same) same.qty += item.qty; else cart.push({...item, key: uid()});
+  saveCart();
+}
+function saveCart(){ LS.set('e7_cart', cart); renderCartBadge(); renderCart(); }
+function cartSubtotal(){ return cart.reduce((t,i)=>t + i.unit*i.qty, 0); }
+function promoDiscount(sub){
+  if(!promo) return 0;
+  if(sub < (promo.min||0)) return 0;
+  return promo.type==='percent' ? sub*promo.value/100 : Math.min(promo.value, sub);
+}
+function renderCartBadge(){
+  const n = cart.reduce((t,i)=>t+i.qty,0);
+  [ $('cartCount'), $('cartCountM') ].forEach(el => { el.textContent = n; el.classList.toggle('hidden', n===0); });
+}
+function renderCart(){
+  if(cart.length === 0){
+    $('cartBody').innerHTML = '<div style="text-align:center;padding:60px 20px;color:var(--gris)"><div style="font-size:3.4rem">🛒</div><p style="margin-top:12px">Votre panier est vide.</p><button class="btn-full dark" style="margin-top:18px" onclick="closeAll();scrollToMenu()">Voir la carte</button></div>';
+    $('cartFoot').innerHTML = '';
+    return;
+  }
+  $('cartBody').innerHTML = cart.map(i => `
+    <div class="cart-item">
+      <div class="emo">${i.emoji||'🍕'}</div>
+      <div class="ci-body">
+        <h4>${i.name}</h4>
+        ${i.meta?'<div class="ci-meta">'+i.meta+'</div>':''}
+        <div class="ci-foot">
+          <div class="ci-qty"><button data-dec="${i.key}">−</button><b>${i.qty}</b><button data-inc="${i.key}">+</button></div>
+          <span class="ci-price">${EUR(i.unit*i.qty)}</span>
+        </div>
+        <button class="ci-del" data-del="${i.key}">Retirer</button>
+      </div>
+    </div>`).join('');
+  const sub = cartSubtotal(), disc = promoDiscount(sub);
+  $('cartFoot').innerHTML = `
+    <div class="promo-row"><input id="promoInput" placeholder="Code promo" value="${promo?promo.code:''}"><button id="promoApply">OK</button></div>
+    ${promo?'<div class="promo-ok">✓ Code '+promo.code+' appliqué (−'+EUR(disc)+')</div>':''}
+    <div class="totals-line"><span>Sous-total</span><span>${EUR(sub)}</span></div>
+    ${disc>0?'<div class="totals-line" style="color:var(--vert)"><span>Réduction</span><span>−'+EUR(disc)+'</span></div>':''}
+    <div class="totals-line"><span>Livraison</span><span>calculée à l'étape suivante</span></div>
+    <div class="totals-line grand"><span>Total</span><b>${EUR(sub-disc)}</b></div>
+    <button class="btn-full" style="margin-top:12px" onclick="openCheckout()">Valider ma commande</button>`;
+  $('cartBody').querySelectorAll('[data-dec]').forEach(b=>b.onclick=()=>{const i=cart.find(x=>x.key===b.dataset.dec); if(i.qty>1)i.qty--; else cart=cart.filter(x=>x.key!==b.dataset.dec); saveCart();});
+  $('cartBody').querySelectorAll('[data-inc]').forEach(b=>b.onclick=()=>{cart.find(x=>x.key===b.dataset.inc).qty++; saveCart();});
+  $('cartBody').querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{cart=cart.filter(x=>x.key!==b.dataset.del); saveCart();});
+  $('promoApply').onclick = applyPromo;
+}
+function applyPromo(){
+  const code = $('promoInput').value.trim().toUpperCase();
+  if(!code){ promo=null; renderCart(); return; }
+  const promos = LS.get('e7_promos', []);
+  const p = promos.find(x => x.code.toUpperCase()===code && x.active!==false);
+  if(!p){ promo=null; renderCart(); toast('❌ Code promo invalide'); return; }
+  if(cartSubtotal() < (p.min||0)){ promo=null; renderCart(); toast('❌ Ce code nécessite un minimum de '+EUR(p.min)); return; }
+  promo = p; renderCart();
+  toast('🎉 Code <b>'+p.code+'</b> appliqué !');
+}
+
+/* ═══════════ CHECKOUT ═══════════ */
+const PAY_METHODS = [
+  {id:'cb', label:'Carte bancaire (Stripe)', ico:'💳'},
+  {id:'applepay', label:'Apple Pay', ico:''},
+  {id:'gpay', label:'Google Pay', ico:'🅶'},
+  {id:'paypal', label:'PayPal', ico:'🅿️'},
+  {id:'surplace', label:'À la livraison / au retrait (espèces ou carte)', ico:'💶'}
+];
+function openCheckout(){
+  if(cart.length===0) return;
+  const user = getSession();
+  checkoutState = { mode: checkoutState.mode||'livraison', zone: zones[0]?.id, pay:'cb',
+    name: user?user.name:'', phone: user?user.phone:'', email: user?user.email:'', address: user?user.address||'':'' };
+  closeAll(); renderCheckout(); openModal('checkoutModal');
+}
+function renderCheckout(){
+  const cs = checkoutState;
+  const sub = cartSubtotal(), disc = promoDiscount(sub);
+  const zone = zones.find(z=>z.id===cs.zone) || zones[0];
+  let fee = 0;
+  if(cs.mode==='livraison'){
+    fee = zone ? zone.fee : 0;
+    if(sub-disc >= settings.freeDeliveryFrom) fee = 0;
+  }
+  const total = Math.max(0, sub - disc + fee);
+  const minOk = cs.mode!=='livraison' || sub >= settings.minOrderDelivery;
+  $('checkoutBody').innerHTML = `
+    <div class="mode-switch">
+      <button class="mode-btn${cs.mode==='livraison'?' sel':''}" data-mode="livraison"><span class="ico">🛵</span>Livraison à domicile</button>
+      <button class="mode-btn${cs.mode==='retrait'?' sel':''}" data-mode="retrait"><span class="ico">🛍️</span>Retrait sur place<br><small style="color:var(--vert)">Click & Collect</small></button>
+    </div>
+    <div class="form-group"><label>Nom complet *</label><input id="coName" value="${cs.name||''}" placeholder="Jean Dupont"></div>
+    <div class="form-group"><label>Téléphone * (notifications SMS)</label><input id="coPhone" type="tel" value="${cs.phone||''}" placeholder="06 12 34 56 78"></div>
+    <div class="form-group"><label>E-mail (notifications de statut)</label><input id="coEmail" type="email" value="${cs.email||''}" placeholder="vous@email.fr"></div>
+    ${cs.mode==='livraison'?`
+      <div class="form-group"><label>Adresse de livraison *</label><input id="coAddress" value="${cs.address||''}" placeholder="N°, rue, code postal, ville"></div>
+      <div class="form-group"><label>Zone de livraison</label>
+        <select id="coZone">${zones.map(z=>'<option value="'+z.id+'"'+(z.id===cs.zone?' selected':'')+'>'+z.name+' — '+(z.fee===0?'offerte':EUR(z.fee))+'</option>').join('')}</select>
+      </div>
+      ${!minOk?'<p style="color:var(--rouge);font-size:.85rem;margin:-6px 0 12px">Minimum de commande en livraison : '+EUR(settings.minOrderDelivery)+'</p>':''}
+    `:`
+      <div style="background:rgba(201,162,39,.1);border:1px solid var(--or);border-radius:12px;padding:14px;margin-bottom:16px;font-size:.9rem">
+        📍 <b>Retrait :</b> ${settings.address}<br>⏱️ Prête en ~${settings.prepMinutes} min
+      </div>`}
+    <div class="form-group"><label>Commentaire pour la commande</label><textarea id="coComment" rows="2" placeholder="Interphone, étage, instructions…">${cs.comment||''}</textarea></div>
+    <div class="form-group"><label>Paiement</label>
+      <div class="pay-grid">${PAY_METHODS.map(p=>'<button class="pay-opt'+(cs.pay===p.id?' sel':'')+'" data-pay="'+p.id+'"><span class="pi">'+p.ico+'</span>'+p.label+'</button>').join('')}</div>
+    </div>
+    <div style="background:var(--ivoire);border-radius:12px;padding:14px;margin:16px 0">
+      <div class="totals-line"><span>Sous-total</span><span>${EUR(sub)}</span></div>
+      ${disc>0?'<div class="totals-line" style="color:var(--vert)"><span>Code '+promo.code+'</span><span>−'+EUR(disc)+'</span></div>':''}
+      <div class="totals-line"><span>${cs.mode==='livraison'?'Frais de livraison':'Retrait sur place'}</span><span>${cs.mode==='livraison'?(fee===0?'Offerts 🎉':EUR(fee)):'Gratuit'}</span></div>
+      <div class="totals-line grand"><span>Total</span><b>${EUR(total)}</b></div>
+    </div>
+    <button class="btn-full" id="coSubmit" ${minOk?'':'disabled'}>${cs.pay==='surplace'?'Confirmer la commande':'Payer '+EUR(total)}</button>
+    <p style="font-size:.75rem;color:var(--gris);text-align:center;margin-top:10px">🔒 Paiement sécurisé · Données protégées (RGPD)</p>`;
+  const keep = () => {
+    cs.name=$('coName').value; cs.phone=$('coPhone').value; cs.email=$('coEmail').value;
+    cs.comment=$('coComment').value;
+    if(cs.mode==='livraison'){ cs.address=$('coAddress').value; cs.zone=$('coZone').value; }
+  };
+  $('checkoutBody').querySelectorAll('.mode-btn').forEach(b=>b.onclick=()=>{keep(); cs.mode=b.dataset.mode; renderCheckout();});
+  $('checkoutBody').querySelectorAll('.pay-opt').forEach(b=>b.onclick=()=>{keep(); cs.pay=b.dataset.pay; renderCheckout();});
+  if($('coZone')) $('coZone').onchange=()=>{keep(); renderCheckout();};
+  $('coSubmit').onclick = () => { keep(); submitOrder(total, fee, disc); };
+}
+function submitOrder(total, fee, disc){
+  const cs = checkoutState;
+  if(!cs.name || !cs.phone){ toast('❌ Merci de renseigner votre nom et téléphone'); return; }
+  if(cs.mode==='livraison' && !cs.address){ toast('❌ Merci de renseigner l\'adresse de livraison'); return; }
+  askNotifPermission();
+  if(cs.pay==='cb' && settings.stripeLink){
+    window.open(settings.stripeLink, '_blank');
+  }
+  const order = {
+    id: uid(),
+    createdAt: Date.now(),
+    items: cart.map(i=>({name:i.name, qty:i.qty, unit:i.unit, meta:i.meta||''})),
+    customer: {name:cs.name, phone:cs.phone, email:cs.email},
+    mode: cs.mode,
+    address: cs.mode==='livraison' ? cs.address : settings.address,
+    zone: cs.mode==='livraison' ? (zones.find(z=>z.id===cs.zone)||{}).name : null,
+    comment: cs.comment||'',
+    pay: PAY_METHODS.find(p=>p.id===cs.pay).label,
+    promo: promo ? promo.code : null,
+    subtotal: cartSubtotal(), discount: disc, fee, total,
+    status: 'recue',
+    etaMinutes: settings.prepMinutes + (cs.mode==='livraison' ? settings.deliveryMinutes : 0),
+    userEmail: getSession() ? getSession().email : (cs.email||null)
+  };
+  const orders = LS.get('e7_orders', []);
+  orders.unshift(order);
+  LS.set('e7_orders', orders);
+  LS.set('e7_lastOrder', order.id);
+  cart = []; promo = null; saveCart();
+  closeAll();
+  notify('📋 Commande reçue !', 'Commande ' + order.id + ' confirmée. Suivi en temps réel activé.');
+  startAutoProgress(order.id);
+  openTracking(order.id);
+}
+
+/* ═══════════ SUIVI DE COMMANDE ═══════════ */
+let trackTimer = null;
+function getOrder(id){ return LS.get('e7_orders', []).find(o=>o.id===id); }
+function updateOrderStatus(id, status){
+  const orders = LS.get('e7_orders', []);
+  const o = orders.find(x=>x.id===id);
+  if(!o || o.status==='livree' || o.status===status) return;
+  o.status = status;
+  LS.set('e7_orders', orders);
+  const flow = STATUS_FLOW(o.mode);
+  const st = flow.find(s=>s.id===status);
+  if(st) notify(st.ico + ' ' + st.label, 'Commande ' + id + ' — ' + st.desc + ' (notification e-mail/SMS envoyée)');
+  if($('trackModal').classList.contains('open')) renderTracking(id);
+}
+/* Démo : la commande avance automatiquement si l'admin ne la pilote pas */
+function startAutoProgress(id){
+  const stepMs = 50000;
+  const advance = (i) => setTimeout(()=>{
+    const o = getOrder(id); if(!o) return;
+    const flow = STATUS_FLOW(o.mode);
+    const cur = flow.findIndex(s=>s.id===o.status);
+    if(cur < i && cur < flow.length-1) updateOrderStatus(id, flow[cur+1].id);
+    if(i < flow.length-1) advance(i+1);
+  }, stepMs*(i));
+  advance(1);
+}
+function openTracking(id){
+  const targetId = id || LS.get('e7_lastOrder', null);
+  if(!targetId || !getOrder(targetId)){ toast('Aucune commande en cours.'); return; }
+  renderTracking(targetId);
+  openModal('trackModal');
+  clearInterval(trackTimer);
+  trackTimer = setInterval(()=>{ if($('trackModal').classList.contains('open')) renderTracking(targetId); else clearInterval(trackTimer); }, 5000);
+}
+function renderTracking(id){
+  const o = getOrder(id); if(!o) return;
+  const flow = STATUS_FLOW(o.mode);
+  const idx = flow.findIndex(s=>s.id===o.status);
+  const pct = (idx/(flow.length-1))*100;
+  const eta = new Date(o.createdAt + o.etaMinutes*60000);
+  const done = idx === flow.length-1;
+  $('trackBody').innerHTML = `
+    <p style="text-align:center;color:var(--gris);font-size:.85rem">Commande <b style="color:var(--noir)">${o.id}</b> · ${o.mode==='livraison'?'🛵 Livraison':'🛍️ Retrait sur place'}</p>
+    <div class="eta-box"><span>${done ? 'Statut final' : (o.mode==='livraison'?'Livraison estimée':'Prête vers')}</span><b>${done ? '✅ Terminée' : eta.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}</b></div>
+    <div class="track-bar"><i style="width:${pct}%"></i></div>
+    <div class="track-steps">
+      ${flow.map((s,i)=>`<div class="tstep ${i<idx?'done':''} ${i===idx?'active':''}">
+        <div class="dot">${i<idx?'✓':s.ico}</div>
+        <div><h4>${s.label}</h4><p>${s.desc}</p></div>
+      </div>`).join('')}
+    </div>
+    ${o.mode==='livraison' && o.status==='livraison' ? `
+      <div style="background:var(--ivoire);border-radius:12px;padding:14px;text-align:center;margin-bottom:14px">
+        <div style="font-size:2rem">🛵</div>
+        <p style="font-size:.85rem;color:var(--gris)">Votre livreur est en route vers<br><b style="color:var(--noir)">${o.address}</b></p>
+        <div class="track-bar" style="margin-top:10px"><i style="width:60%;animation:riderMove 3s ease-in-out infinite alternate"></i></div>
+      </div>`:''}
+    ${o.mode==='retrait' ? `
+      <a class="btn-waze" href="${wazeUrl()}" target="_blank" rel="noopener" style="width:100%;justify-content:center;margin-bottom:10px">🚗 Démarrer l'itinéraire avec Waze</a>
+      <a class="btn-gmaps" href="${gmapsUrl()}" target="_blank" rel="noopener" style="width:100%;justify-content:center;margin-bottom:14px">🗺️ Itinéraire Google Maps</a>`:''}
+    <div style="font-size:.85rem;color:var(--gris)">
+      ${o.items.map(i=>'<div class="totals-line"><span>'+i.qty+'× '+i.name+'</span><span>'+EUR(i.unit*i.qty)+'</span></div>').join('')}
+      ${o.discount>0?'<div class="totals-line" style="color:var(--vert)"><span>Réduction'+(o.promo?' ('+o.promo+')':'')+'</span><span>−'+EUR(o.discount)+'</span></div>':''}
+      ${o.mode==='livraison'?'<div class="totals-line"><span>Livraison</span><span>'+(o.fee===0?'Offerte':EUR(o.fee))+'</span></div>':''}
+      <div class="totals-line grand"><span>Total (${o.pay})</span><b>${EUR(o.total)}</b></div>
+    </div>`;
+}
+
+/* ═══════════ COMPTE CLIENT ═══════════ */
+function getSession(){ return LS.get('e7_session', null); }
+function openAccount(){
+  const user = getSession();
+  if(user) renderAccountDash(user); else renderAuth('login');
+  openModal('accountModal');
+}
+function renderAuth(mode){
+  $('accTitle').textContent = mode==='login' ? 'Connexion' : 'Créer un compte';
+  $('accBody').innerHTML = `
+    ${mode==='signup'?'<div class="form-group"><label>Nom complet</label><input id="auName" placeholder="Jean Dupont"></div>':''}
+    <div class="form-group"><label>E-mail</label><input id="auEmail" type="email" placeholder="vous@email.fr"></div>
+    <div class="form-group"><label>Mot de passe</label><input id="auPass" type="password" placeholder="••••••••"></div>
+    ${mode==='signup'?'<div class="form-group"><label>Téléphone</label><input id="auPhone" type="tel" placeholder="06 12 34 56 78"></div><div class="form-group"><label>Adresse (optionnel)</label><input id="auAddress" placeholder="Adresse de livraison"></div>':''}
+    <button class="btn-full" id="auSubmit">${mode==='login'?'Se connecter':'Créer mon compte'}</button>
+    <p style="text-align:center;margin-top:14px;font-size:.88rem">${mode==='login'
+      ? 'Pas encore de compte ? <a href="#" id="auSwitch" style="color:var(--or-sombre);font-weight:600">Inscrivez-vous</a>'
+      : 'Déjà un compte ? <a href="#" id="auSwitch" style="color:var(--or-sombre);font-weight:600">Connectez-vous</a>'}</p>`;
+  $('auSwitch').onclick = e => { e.preventDefault(); renderAuth(mode==='login'?'signup':'login'); };
+  $('auSubmit').onclick = () => {
+    const email = $('auEmail').value.trim().toLowerCase(), pass = $('auPass').value;
+    if(!email || !pass){ toast('❌ E-mail et mot de passe requis'); return; }
+    let users = LS.get('e7_users', []);
+    if(mode==='signup'){
+      if(users.find(u=>u.email===email)){ toast('❌ Un compte existe déjà avec cet e-mail'); return; }
+      const u = {email, pass: btoa(pass), name:$('auName').value.trim()||email.split('@')[0], phone:$('auPhone').value.trim(), address:$('auAddress').value.trim(), createdAt:Date.now()};
+      users.push(u); LS.set('e7_users', users);
+      LS.set('e7_session', {email:u.email, name:u.name, phone:u.phone, address:u.address});
+      toast('🎉 Bienvenue, <b>'+u.name+'</b> !');
+      renderAccountDash(getSession());
+    } else {
+      const u = users.find(x=>x.email===email && x.pass===btoa(pass));
+      if(!u){ toast('❌ Identifiants incorrects'); return; }
+      LS.set('e7_session', {email:u.email, name:u.name, phone:u.phone, address:u.address});
+      toast('👋 Bon retour, <b>'+u.name+'</b> !');
+      renderAccountDash(getSession());
+    }
+  };
+}
+function renderAccountDash(user){
+  $('accTitle').textContent = 'Mon compte';
+  const orders = LS.get('e7_orders', []).filter(o => o.userEmail===user.email || (o.customer && o.customer.email===user.email));
+  $('accBody').innerHTML = `
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px">
+      <div style="width:52px;height:52px;border-radius:50%;background:var(--noir);color:var(--or);display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:700">${(user.name||'?')[0].toUpperCase()}</div>
+      <div><b>${user.name}</b><br><span style="color:var(--gris);font-size:.85rem">${user.email}</span></div>
+    </div>
+    <h4 style="font-size:.8rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gris);margin-bottom:10px">Historique des commandes (${orders.length})</h4>
+    ${orders.length===0 ? '<p style="color:var(--gris);font-size:.9rem;margin-bottom:16px">Aucune commande pour le moment.</p>' :
+      orders.slice(0,10).map(o=>{
+        const flow = STATUS_FLOW(o.mode); const st = flow.find(s=>s.id===o.status)||flow[0];
+        return `<div style="background:var(--ivoire);border-radius:12px;padding:13px 15px;margin-bottom:10px;cursor:pointer" onclick="openTracking('${o.id}')">
+          <div style="display:flex;justify-content:space-between"><b style="font-size:.9rem">${o.id}</b><b>${EUR(o.total)}</b></div>
+          <div style="display:flex;justify-content:space-between;font-size:.78rem;color:var(--gris);margin-top:3px">
+            <span>${new Date(o.createdAt).toLocaleDateString('fr-FR')} · ${o.items.reduce((t,i)=>t+i.qty,0)} article(s)</span>
+            <span style="color:${o.status==='livree'?'var(--vert)':'var(--or-sombre)'};font-weight:600">${st.ico} ${st.label}</span>
+          </div></div>`;
+      }).join('')}
+    <button class="btn-full dark" style="margin-top:8px" id="accLogout">Se déconnecter</button>`;
+  $('accLogout').onclick = () => { localStorage.removeItem('e7_session'); toast('👋 À bientôt !'); renderAuth('login'); };
+}
+
+/* ═══════════ RGPD ═══════════ */
+function clearMyData(){
+  ['e7_session','e7_cart','e7_lastOrder'].forEach(k=>localStorage.removeItem(k));
+  cart = []; promo = null; saveCart();
+  toast('🗑️ Vos données locales ont été supprimées.');
+  closeAll();
+}
+function initCookies(){
+  if(!localStorage.getItem('e7_cookies')) $('cookieBanner').classList.add('show');
+  $('ckAccept').onclick = () => { localStorage.setItem('e7_cookies','all'); $('cookieBanner').classList.remove('show'); };
+  $('ckRefuse').onclick = () => { localStorage.setItem('e7_cookies','essential'); $('cookieBanner').classList.remove('show'); };
+  $('ckPrivacyLink').onclick = e => { e.preventDefault(); openModal('privacyModal'); };
+}
+
+/* ═══════════ MODALES / DRAWERS / NAV ═══════════ */
+function openModal(id){ closeAll(true); $('overlay').classList.add('open'); $(id).classList.add('open'); document.body.style.overflow='hidden'; }
+function closeAll(keepOverlay){
+  document.querySelectorAll('.modal.open,.drawer.open').forEach(el=>el.classList.remove('open'));
+  if(!keepOverlay){ $('overlay').classList.remove('open'); document.body.style.overflow=''; }
+}
+function openCart(){ closeAll(true); $('overlay').classList.add('open'); $('cartDrawer').classList.add('open'); document.body.style.overflow='hidden'; renderCart(); }
+function scrollToMenu(){ closeAll(); document.getElementById('menu').scrollIntoView({behavior:'smooth'}); }
+
+document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>closeAll());
+$('overlay').onclick = () => closeAll();
+$('btnCart').onclick = openCart;
+$('fabCart').onclick = openCart;
+$('btnAccount').onclick = openAccount;
+$('footAccount').onclick = e => { e.preventDefault(); openAccount(); };
+$('mobAccount').onclick = e => { e.preventDefault(); toggleMobile(false); openAccount(); };
+$('footTrack').onclick = e => { e.preventDefault(); openTracking(); };
+$('footPrivacy').onclick = e => { e.preventDefault(); openModal('privacyModal'); };
+$('footCookies').onclick = e => { e.preventDefault(); localStorage.removeItem('e7_cookies'); $('cookieBanner').classList.add('show'); };
+
+function toggleMobile(force){
+  const open = force!==undefined ? force : !$('mobileMenu').classList.contains('open');
+  $('mobileMenu').classList.toggle('open', open);
+  $('hamburger').classList.toggle('open', open);
+}
+$('hamburger').onclick = () => toggleMobile();
+$('mobileMenu').querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>toggleMobile(false)));
+
+/* ═══════════ SCROLL REVEAL ═══════════ */
+const io = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('visible'); io.unobserve(e.target); } });
+},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+/* ═══════════ SYNC TEMPS RÉEL (admin ↔ client) ═══════════ */
+window.addEventListener('storage', e => {
+  if(e.key==='e7_menu'){ menu = LS.get('e7_menu', DEFAULT_MENU); renderMenu(); }
+  if(e.key==='e7_settings'){ settings = LS.get('e7_settings', DEFAULT_SETTINGS); applySettingsToUI(); }
+  if(e.key==='e7_zones'){ zones = LS.get('e7_zones', DEFAULT_ZONES); }
+  if(e.key==='e7_orders'){
+    const last = LS.get('e7_lastOrder', null);
+    if(last){
+      const o = getOrder(last);
+      if(o && o._notified !== o.status){
+        const flow = STATUS_FLOW(o.mode); const st = flow.find(s=>s.id===o.status);
+        if(st && o.status!=='recue') notify(st.ico+' '+st.label, 'Commande '+o.id+' — '+st.desc);
+      }
+      if($('trackModal').classList.contains('open')) renderTracking(last);
+    }
+  }
+});
+
+/* ═══════════ INIT ═══════════ */
+applySettingsToUI();
+renderTabs();
+renderMenu();
+renderCartBadge();
+initCookies();
+</script>
+</body>
+</html>

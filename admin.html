@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ÉCHELON 7 — Espace Administrateur</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👨‍🍳</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --noir:#0A0A0A;--noir2:#141414;--noir3:#1E1E1E;
+  --or:#C9A227;--or-clair:#E5C558;--or-sombre:#9A7B1C;
+  --blanc:#FFF;--ivoire:#FAF7F0;--gris:#8A8A8A;--gris-clair:#E8E4DC;
+  --vert:#2E9E5B;--rouge:#D64541;--bleu:#3B7DD8;
+  --radius:14px;--trans:all .25s ease;
+}
+body{font-family:'Jost',sans-serif;background:var(--ivoire);color:var(--noir);line-height:1.5;min-height:100vh}
+h1,h2,h3{font-family:'Playfair Display',serif}
+button{font-family:inherit;cursor:pointer}
+input,select,textarea{font-family:inherit;font-size:.95rem}
+
+/* login */
+.login-screen{position:fixed;inset:0;background:radial-gradient(ellipse at 50% 30%,#2a2410 0%,var(--noir) 60%);display:flex;align-items:center;justify-content:center;z-index:100;padding:20px}
+.login-card{background:var(--blanc);border-radius:20px;padding:40px 34px;width:min(400px,100%);text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.5)}
+.login-card h1{font-size:1.6rem;margin:10px 0 4px}
+.login-card h1 span{color:var(--or)}
+.login-card p{color:var(--gris);font-size:.88rem;margin-bottom:22px}
+.login-card input{width:100%;padding:13px 16px;border:1px solid var(--gris-clair);border-radius:12px;background:var(--ivoire);margin-bottom:12px;text-align:center;font-size:1.05rem}
+.login-card input:focus{outline:none;border-color:var(--or)}
+
+/* layout */
+.app{display:none;grid-template-columns:230px 1fr;min-height:100vh}
+.app.on{display:grid}
+aside{background:var(--noir);color:var(--gris-clair);padding:24px 0;display:flex;flex-direction:column;position:sticky;top:0;height:100vh}
+.side-logo{font-family:'Playfair Display',serif;font-weight:900;font-size:1.3rem;color:var(--blanc);padding:0 24px 20px;letter-spacing:.08em;border-bottom:1px solid #222;margin-bottom:16px}
+.side-logo span{color:var(--or)}
+.side-logo small{display:block;font-family:'Jost',sans-serif;font-size:.68rem;letter-spacing:.25em;color:var(--gris);font-weight:400}
+.side-nav{flex:1}
+.side-nav button{display:flex;align-items:center;gap:12px;width:100%;background:none;border:none;color:var(--gris-clair);padding:13px 24px;font-size:.92rem;transition:var(--trans);border-left:3px solid transparent;text-align:left}
+.side-nav button:hover{color:var(--or)}
+.side-nav button.active{color:var(--or);border-left-color:var(--or);background:rgba(201,162,39,.08)}
+.side-nav .cnt{margin-left:auto;background:var(--or);color:var(--noir);font-size:.7rem;font-weight:700;min-width:20px;height:20px;border-radius:10px;display:flex;align-items:center;justify-content:center;padding:0 5px}
+.side-foot{padding:16px 24px;border-top:1px solid #222;display:flex;flex-direction:column;gap:8px}
+.side-foot a,.side-foot button{color:var(--gris);background:none;border:none;font-size:.82rem;text-decoration:none;text-align:left;transition:var(--trans)}
+.side-foot a:hover,.side-foot button:hover{color:var(--or)}
+
+main{padding:32px;max-width:1100px;width:100%}
+.page{display:none}
+.page.on{display:block;animation:fade .35s ease}
+@keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.page-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:24px}
+.page-head h2{font-size:1.7rem}
+.page-head p{color:var(--gris);font-size:.88rem}
+
+/* cards & stats */
+.stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:16px;margin-bottom:28px}
+.stat{background:var(--blanc);border-radius:var(--radius);padding:20px;box-shadow:0 3px 14px rgba(0,0,0,.05)}
+.stat .lbl{font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gris)}
+.stat .val{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;margin-top:4px}
+.stat .val small{font-size:.9rem;color:var(--gris)}
+.stat.gold{background:var(--noir);color:var(--blanc)}
+.stat.gold .val{color:var(--or)}
+.card{background:var(--blanc);border-radius:var(--radius);padding:22px;box-shadow:0 3px 14px rgba(0,0,0,.05);margin-bottom:20px}
+.card h3{font-size:1.1rem;margin-bottom:14px}
+
+/* chart */
+.chart{display:flex;align-items:flex-end;gap:8px;height:150px;padding-top:8px}
+.chart .bar{flex:1;background:linear-gradient(180deg,var(--or),var(--or-sombre));border-radius:6px 6px 0 0;min-height:3px;position:relative;transition:height .6s ease}
+.chart .bar span{position:absolute;bottom:-22px;left:0;right:0;text-align:center;font-size:.65rem;color:var(--gris)}
+.chart .bar b{position:absolute;top:-20px;left:0;right:0;text-align:center;font-size:.68rem}
+.chart-wrap{padding-bottom:26px}
+
+/* orders */
+.order-card{background:var(--blanc);border-radius:var(--radius);padding:18px 20px;box-shadow:0 3px 14px rgba(0,0,0,.05);margin-bottom:14px;border-left:4px solid var(--or)}
+.order-card.done{border-left-color:var(--vert);opacity:.75}
+.oc-top{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:8px}
+.oc-top b{font-size:1.02rem}
+.badge{display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 12px;border-radius:14px}
+.badge.recue{background:rgba(59,125,216,.12);color:var(--bleu)}
+.badge.preparation{background:rgba(201,162,39,.15);color:var(--or-sombre)}
+.badge.cuisson{background:rgba(214,69,65,.12);color:var(--rouge)}
+.badge.livraison,.badge.prete{background:rgba(201,162,39,.25);color:var(--noir)}
+.badge.livree{background:rgba(46,158,91,.14);color:var(--vert)}
+.oc-meta{font-size:.82rem;color:var(--gris);margin-bottom:8px}
+.oc-items{font-size:.88rem;background:var(--ivoire);border-radius:10px;padding:10px 14px;margin-bottom:10px}
+.oc-items div{display:flex;justify-content:space-between;padding:2px 0}
+.oc-items .meta{font-size:.75rem;color:var(--gris);display:block}
+.oc-actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:none;border-radius:22px;padding:9px 18px;font-weight:600;font-size:.82rem;transition:var(--trans)}
+.btn:hover{transform:translateY(-1px)}
+.btn-gold{background:var(--or);color:var(--noir)}
+.btn-dark{background:var(--noir);color:var(--or)}
+.btn-line{background:transparent;border:1px solid var(--gris-clair);color:var(--noir)}
+.btn-red{background:rgba(214,69,65,.1);color:var(--rouge)}
+.btn-green{background:var(--vert);color:#fff}
+.filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.filter-row button{border:1px solid var(--gris-clair);background:var(--blanc);border-radius:20px;padding:8px 16px;font-size:.8rem;transition:var(--trans)}
+.filter-row button.active{background:var(--noir);color:var(--or);border-color:var(--noir)}
+
+/* tables */
+table{width:100%;border-collapse:collapse;font-size:.9rem}
+th{text-align:left;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gris);padding:8px 10px;border-bottom:1px solid var(--gris-clair)}
+td{padding:10px;border-bottom:1px solid var(--ivoire);vertical-align:middle}
+td input,td select{padding:7px 10px;border:1px solid var(--gris-clair);border-radius:8px;background:var(--ivoire);width:100%}
+td input:focus{outline:none;border-color:var(--or)}
+.w-price{max-width:90px}
+.w-sm{max-width:70px}
+.tbl-wrap{overflow-x:auto}
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.fg label{display:block;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gris);margin-bottom:5px}
+.fg input,.fg select{width:100%;padding:11px 13px;border:1px solid var(--gris-clair);border-radius:10px;background:var(--ivoire)}
+.fg input:focus{outline:none;border-color:var(--or)}
+.switch{position:relative;width:44px;height:24px;display:inline-block}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:var(--gris-clair);border-radius:14px;transition:var(--trans);cursor:pointer}
+.slider::before{content:'';position:absolute;width:18px;height:18px;left:3px;top:3px;background:#fff;border-radius:50%;transition:var(--trans)}
+.switch input:checked + .slider{background:var(--vert)}
+.switch input:checked + .slider::before{transform:translateX(20px)}
+.empty{text-align:center;color:var(--gris);padding:40px 20px}
+.empty .e{font-size:3rem}
+#toasts{position:fixed;top:20px;right:20px;z-index:1200;display:flex;flex-direction:column;gap:10px}
+.toast{background:var(--noir);color:var(--blanc);border-left:3px solid var(--or);border-radius:10px;padding:13px 18px;font-size:.88rem;box-shadow:0 10px 30px rgba(0,0,0,.35);animation:slideIn .3s ease,fadeOut .4s ease 3.5s forwards}
+@keyframes slideIn{from{transform:translateX(110%)}to{transform:none}}
+@keyframes fadeOut{to{opacity:0;transform:translateX(110%)}}
+
+@media(max-width:820px){
+  .app.on{grid-template-columns:1fr}
+  aside{position:fixed;bottom:0;top:auto;left:0;right:0;height:auto;flex-direction:row;align-items:center;padding:0;z-index:90;overflow-x:auto}
+  .side-logo,.side-foot{display:none}
+  .side-nav{display:flex;flex:1}
+  .side-nav button{flex-direction:column;gap:3px;font-size:.68rem;padding:10px 6px;border-left:none;border-top:3px solid transparent;text-align:center;justify-content:center}
+  .side-nav button.active{border-top-color:var(--or);border-left:none}
+  .side-nav .cnt{position:absolute;top:4px;right:8px;margin:0}
+  main{padding:20px 16px 110px}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-card">
+    <div style="font-size:2.6rem">👨‍🍳</div>
+    <h1>ÉCHELON<span>7</span></h1>
+    <p>Espace administrateur — accès réservé</p>
+    <input type="password" id="pinInput" placeholder="Code d'accès" autocomplete="current-password">
+    <button class="btn btn-gold" style="width:100%;padding:13px;font-size:.95rem" onclick="tryLogin()">Se connecter</button>
+    <p style="margin-top:14px;font-size:.75rem">Code par défaut : <b>echelon7</b> (modifiable dans Réglages)</p>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="app" id="app">
+  <aside>
+    <div class="side-logo">ÉCHELON<span>7</span><small>ADMINISTRATION</small></div>
+    <nav class="side-nav" id="sideNav">
+      <button data-page="dash" class="active">📊 <span>Tableau de bord</span></button>
+      <button data-page="orders">🧾 <span>Commandes</span><span class="cnt" id="pendingCnt" style="display:none">0</span></button>
+      <button data-page="menu">🍕 <span>Menu & prix</span></button>
+      <button data-page="zones">🗺️ <span>Zones livraison</span></button>
+      <button data-page="promos">🏷️ <span>Promotions</span></button>
+      <button data-page="settings">⚙️ <span>Réglages</span></button>
+    </nav>
+    <div class="side-foot">
+      <a href="index.html">← Voir le site</a>
+      <button onclick="logout()">Se déconnecter</button>
+    </div>
+  </aside>
+
+  <main>
+    <!-- DASHBOARD -->
+    <div class="page on" id="page-dash">
+      <div class="page-head"><div><h2>Tableau de bord</h2><p>Vue d'ensemble de l'activité</p></div></div>
+      <div class="stat-row" id="statRow"></div>
+      <div class="card chart-wrap"><h3>Chiffre d'affaires — 7 derniers jours</h3><div class="chart" id="chart7d"></div></div>
+      <div class="card"><h3>🏆 Produits les plus vendus</h3><div class="tbl-wrap"><table id="topProducts"></table></div></div>
+    </div>
+
+    <!-- ORDERS -->
+    <div class="page" id="page-orders">
+      <div class="page-head"><div><h2>Commandes</h2><p>Gestion en temps réel — les clients sont notifiés à chaque changement de statut</p></div></div>
+      <div class="filter-row" id="orderFilters"></div>
+      <div id="ordersList"></div>
+    </div>
+
+    <!-- MENU -->
+    <div class="page" id="page-menu">
+      <div class="page-head"><div><h2>Menu & prix</h2><p>Les modifications sont visibles immédiatement sur le site</p></div>
+        <button class="btn btn-gold" onclick="addProduct()">+ Ajouter un produit</button></div>
+      <div class="card tbl-wrap"><table id="menuTable"></table></div>
+    </div>
+
+    <!-- ZONES -->
+    <div class="page" id="page-zones">
+      <div class="page-head"><div><h2>Zones de livraison</h2><p>Frais de livraison selon la distance</p></div>
+        <button class="btn btn-gold" onclick="addZone()">+ Ajouter une zone</button></div>
+      <div class="card tbl-wrap"><table id="zonesTable"></table></div>
+      <div class="card">
+        <h3>Conditions de livraison</h3>
+        <div class="form-grid">
+          <div class="fg"><label>Livraison offerte à partir de (€)</label><input type="number" id="setFreeFrom" step="0.5"></div>
+          <div class="fg"><label>Commande minimum livraison (€)</label><input type="number" id="setMinOrder" step="0.5"></div>
+        </div>
+        <button class="btn btn-dark" style="margin-top:14px" onclick="saveDeliverySettings()">Enregistrer</button>
+      </div>
+    </div>
+
+    <!-- PROMOS -->
+    <div class="page" id="page-promos">
+      <div class="page-head"><div><h2>Promotions</h2><p>Codes de réduction utilisables au panier</p></div>
+        <button class="btn btn-gold" onclick="addPromo()">+ Nouveau code</button></div>
+      <div class="card tbl-wrap"><table id="promosTable"></table></div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="page" id="page-settings">
+      <div class="page-head"><div><h2>Réglages</h2><p>Informations de la pizzeria</p></div></div>
+      <div class="card">
+        <h3>Établissement</h3>
+        <div class="form-grid">
+          <div class="fg"><label>Adresse complète</label><input id="setAddress"></div>
+          <div class="fg"><label>Téléphone</label><input id="setPhone"></div>
+          <div class="fg"><label>WhatsApp (format international sans +)</label><input id="setWhatsapp" placeholder="33612345678"></div>
+          <div class="fg"><label>Horaires</label><input id="setHours"></div>
+          <div class="fg"><label>Latitude (Waze / Maps)</label><input type="number" id="setLat" step="0.0001"></div>
+          <div class="fg"><label>Longitude (Waze / Maps)</label><input type="number" id="setLng" step="0.0001"></div>
+          <div class="fg"><label>Temps de préparation (min)</label><input type="number" id="setPrep"></div>
+          <div class="fg"><label>Temps de livraison (min)</label><input type="number" id="setDeliv"></div>
+          <div class="fg"><label>Lien de paiement Stripe (optionnel)</label><input id="setStripe" placeholder="https://buy.stripe.com/…"></div>
+          <div class="fg"><label>Nouveau code d'accès admin</label><input type="password" id="setPin" placeholder="Laisser vide pour conserver"></div>
+        </div>
+        <button class="btn btn-gold" style="margin-top:16px" onclick="saveSettings()">Enregistrer les réglages</button>
+      </div>
+      <div class="card">
+        <h3>⚠️ Données</h3>
+        <p style="font-size:.85rem;color:var(--gris);margin-bottom:12px">Ce site fonctionne sans serveur : les données (menu, commandes, comptes) sont stockées dans le navigateur. Pour une mise en production avec paiements réels et notifications e-mail/SMS, connectez un backend (Stripe, Twilio…).</p>
+        <button class="btn btn-red" onclick="resetAll()">Réinitialiser toutes les données</button>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div id="toasts"></div>
+
+<script>
+/* ═════ ÉCHELON 7 — Administration (localStorage partagé avec index.html) ═════ */
+const LS = {
+  get(k, fb){ try{ const v = localStorage.getItem(k); return v ? JSON.parse(v) : fb; }catch(e){ return fb; } },
+  set(k, v){ localStorage.setItem(k, JSON.stringify(v)); }
+};
+const EUR = n => (+n).toFixed(2).replace('.', ',') + ' €';
+const $ = id => document.getElementById(id);
+const CATS = {pizzas:'🍕 Pizza', boissons:'🥤 Boisson', desserts:'🍰 Dessert', supplements:'➕ Supplément'};
+const FLOW_LIVRAISON = ['recue','preparation','cuisson','livraison','livree'];
+const FLOW_RETRAIT  = ['recue','preparation','cuisson','prete','livree'];
+const STATUS_LABELS = {recue:'📋 Reçue', preparation:'👨‍🍳 Préparation', cuisson:'🔥 Cuisson', livraison:'🛵 En livraison', prete:'🛍️ Prête', livree:'✅ Terminée'};
+let orderFilter = 'active';
+
+function toast(msg){
+  const t = document.createElement('div'); t.className='toast'; t.innerHTML=msg;
+  $('toasts').appendChild(t); setTimeout(()=>t.remove(), 4000);
+}
+
+/* ── Auth ── */
+function adminPin(){ return LS.get('e7_admin_pin', 'echelon7'); }
+function tryLogin(){
+  if($('pinInput').value === adminPin()){
+    sessionStorage.setItem('e7_admin','1');
+    showApp();
+  } else toast('❌ Code incorrect');
+}
+$('pinInput').addEventListener('keydown', e => { if(e.key==='Enter') tryLogin(); });
+function logout(){ sessionStorage.removeItem('e7_admin'); location.reload(); }
+function showApp(){
+  $('loginScreen').style.display='none';
+  $('app').classList.add('on');
+  renderAll();
+}
+
+/* ── Navigation ── */
+$('sideNav').querySelectorAll('button').forEach(b => b.onclick = () => {
+  $('sideNav').querySelectorAll('button').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  $('page-'+b.dataset.page).classList.add('on');
+});
+
+/* ═══════════ DASHBOARD ═══════════ */
+function renderDash(){
+  const orders = LS.get('e7_orders', []);
+  const today = new Date(); today.setHours(0,0,0,0);
+  const todayOrders = orders.filter(o=>o.createdAt >= today.getTime());
+  const caToday = todayOrders.reduce((t,o)=>t+o.total,0);
+  const caTotal = orders.reduce((t,o)=>t+o.total,0);
+  const pending = orders.filter(o=>o.status!=='livree').length;
+  const avg = orders.length ? caTotal/orders.length : 0;
+  $('statRow').innerHTML = `
+    <div class="stat gold"><div class="lbl">CA aujourd'hui</div><div class="val">${EUR(caToday)}</div></div>
+    <div class="stat"><div class="lbl">Commandes aujourd'hui</div><div class="val">${todayOrders.length}</div></div>
+    <div class="stat"><div class="lbl">En cours</div><div class="val">${pending}</div></div>
+    <div class="stat"><div class="lbl">Panier moyen</div><div class="val">${EUR(avg)}</div></div>
+    <div class="stat"><div class="lbl">CA total</div><div class="val">${EUR(caTotal)}</div></div>`;
+  /* graphique 7 jours */
+  const days = [];
+  for(let i=6;i>=0;i--){
+    const d = new Date(today); d.setDate(d.getDate()-i);
+    const next = new Date(d); next.setDate(next.getDate()+1);
+    const ca = orders.filter(o=>o.createdAt>=d.getTime() && o.createdAt<next.getTime()).reduce((t,o)=>t+o.total,0);
+    days.push({label: d.toLocaleDateString('fr-FR',{weekday:'short'}), ca});
+  }
+  const max = Math.max(...days.map(d=>d.ca), 1);
+  $('chart7d').innerHTML = days.map(d=>
+    '<div class="bar" style="height:'+Math.round(d.ca/max*100)+'%"><b>'+(d.ca>0?Math.round(d.ca)+'€':'')+'</b><span>'+d.label+'</span></div>'
+  ).join('');
+  /* top produits */
+  const sales = {};
+  orders.forEach(o=>o.items.forEach(i=>{
+    sales[i.name] = sales[i.name] || {qty:0, ca:0};
+    sales[i.name].qty += i.qty; sales[i.name].ca += i.unit*i.qty;
+  }));
+  const top = Object.entries(sales).sort((a,b)=>b[1].qty-a[1].qty).slice(0,6);
+  $('topProducts').innerHTML = top.length===0
+    ? '<tr><td class="empty">Aucune vente pour le moment</td></tr>'
+    : '<tr><th>Produit</th><th>Quantité</th><th>CA généré</th></tr>' +
+      top.map(([name,s],i)=>'<tr><td>'+(i===0?'🥇 ':i===1?'🥈 ':i===2?'🥉 ':'')+name+'</td><td>'+s.qty+'</td><td><b>'+EUR(s.ca)+'</b></td></tr>').join('');
+}
+
+/* ═══════════ COMMANDES ═══════════ */
+function renderOrders(){
+  const orders = LS.get('e7_orders', []);
+  const pending = orders.filter(o=>o.status!=='livree').length;
+  $('pendingCnt').style.display = pending ? 'flex' : 'none';
+  $('pendingCnt').textContent = pending;
+  const filters = [
+    {id:'active', label:'🔴 En cours ('+pending+')'},
+    {id:'all', label:'Toutes ('+orders.length+')'},
+    {id:'livree', label:'✅ Terminées'}
+  ];
+  $('orderFilters').innerHTML = filters.map(f=>'<button class="'+(orderFilter===f.id?'active':'')+'" data-f="'+f.id+'">'+f.label+'</button>').join('');
+  $('orderFilters').querySelectorAll('button').forEach(b=>b.onclick=()=>{orderFilter=b.dataset.f; renderOrders();});
+  let list = orders;
+  if(orderFilter==='active') list = orders.filter(o=>o.status!=='livree');
+  if(orderFilter==='livree') list = orders.filter(o=>o.status==='livree');
+  if(list.length===0){
+    $('ordersList').innerHTML = '<div class="empty"><div class="e">🍕</div><p>Aucune commande ici.</p></div>';
+    return;
+  }
+  $('ordersList').innerHTML = list.map(o=>{
+    const flow = o.mode==='livraison' ? FLOW_LIVRAISON : FLOW_RETRAIT;
+    const idx = flow.indexOf(o.status);
+    const next = idx < flow.length-1 ? flow[idx+1] : null;
+    return `<div class="order-card${o.status==='livree'?' done':''}">
+      <div class="oc-top">
+        <div><b>${o.id}</b> · ${o.mode==='livraison'?'🛵 Livraison':'🛍️ Retrait'}</div>
+        <span class="badge ${o.status}">${STATUS_LABELS[o.status]}</span>
+      </div>
+      <div class="oc-meta">
+        ${new Date(o.createdAt).toLocaleString('fr-FR')} · <b>${o.customer.name}</b> · ${o.customer.phone}
+        ${o.customer.email?' · '+o.customer.email:''}<br>
+        📍 ${o.address}${o.zone?' ('+o.zone+')':''} · 💳 ${o.pay}
+        ${o.comment?'<br>💬 « '+o.comment+' »':''}
+      </div>
+      <div class="oc-items">
+        ${o.items.map(i=>'<div><span>'+i.qty+'× '+i.name+(i.meta?'<span class="meta">'+i.meta+'</span>':'')+'</span><span>'+EUR(i.unit*i.qty)+'</span></div>').join('')}
+        ${o.discount>0?'<div style="color:var(--vert)"><span>Réduction'+(o.promo?' ('+o.promo+')':'')+'</span><span>−'+EUR(o.discount)+'</span></div>':''}
+        ${o.fee>0?'<div><span>Livraison</span><span>'+EUR(o.fee)+'</span></div>':''}
+        <div style="font-weight:700;border-top:1px solid var(--gris-clair);margin-top:6px;padding-top:6px"><span>Total</span><span>${EUR(o.total)}</span></div>
+      </div>
+      <div class="oc-actions">
+        ${next?'<button class="btn btn-gold" onclick="advanceOrder(\''+o.id+'\',\''+next+'\')">→ '+STATUS_LABELS[next]+'</button>':''}
+        ${o.status!=='livree'?'<button class="btn btn-green" onclick="advanceOrder(\''+o.id+'\',\'livree\')">✅ Terminer</button>':''}
+        <a class="btn btn-line" href="tel:${o.customer.phone.replace(/\s/g,'')}">📞 Appeler</a>
+        <button class="btn btn-red" onclick="deleteOrder('${o.id}')">Supprimer</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+function advanceOrder(id, status){
+  const orders = LS.get('e7_orders', []);
+  const o = orders.find(x=>x.id===id); if(!o) return;
+  o.status = status;
+  LS.set('e7_orders', orders);
+  toast('📣 '+id+' → '+STATUS_LABELS[status]+'<br><small>Client notifié (e-mail/SMS)</small>');
+  renderOrders(); renderDash();
+}
+function deleteOrder(id){
+  if(!confirm('Supprimer la commande '+id+' ?')) return;
+  LS.set('e7_orders', LS.get('e7_orders', []).filter(o=>o.id!==id));
+  renderOrders(); renderDash();
+}
+
+/* ═══════════ MENU ═══════════ */
+function renderMenu(){
+  const menu = LS.get('e7_menu', []);
+  $('menuTable').innerHTML = `<tr><th>Produit</th><th>Catégorie</th><th>Description</th><th class="w-price">Prix €</th><th class="w-sm">Emoji</th><th>Badge</th><th class="w-sm">Dispo</th><th></th></tr>` +
+    menu.map((p,i)=>`<tr>
+      <td><input value="${esc(p.name)}" data-i="${i}" data-f="name"></td>
+      <td><select data-i="${i}" data-f="cat">${Object.entries(CATS).map(([k,v])=>'<option value="'+k+'"'+(p.cat===k?' selected':'')+'>'+v+'</option>').join('')}</select></td>
+      <td><input value="${esc(p.desc)}" data-i="${i}" data-f="desc"></td>
+      <td class="w-price"><input type="number" step="0.1" value="${p.price}" data-i="${i}" data-f="price"></td>
+      <td class="w-sm"><input value="${p.emoji||''}" data-i="${i}" data-f="emoji"></td>
+      <td><input value="${esc(p.badge||'')}" data-i="${i}" data-f="badge" placeholder="Signature…"></td>
+      <td class="w-sm"><label class="switch"><input type="checkbox" ${p.avail!==false?'checked':''} data-i="${i}" data-f="avail"><span class="slider"></span></label></td>
+      <td><button class="btn btn-red" onclick="delProduct(${i})">✕</button></td>
+    </tr>`).join('');
+  $('menuTable').querySelectorAll('input,select').forEach(el=>{
+    el.onchange = () => {
+      const menu = LS.get('e7_menu', []);
+      const p = menu[+el.dataset.i]; const f = el.dataset.f;
+      if(f==='price') p.price = parseFloat(el.value)||0;
+      else if(f==='avail') p.avail = el.checked;
+      else p[f] = el.value;
+      LS.set('e7_menu', menu);
+      toast('✓ Menu mis à jour');
+    };
+  });
+}
+function esc(s){ return String(s||'').replace(/"/g,'&quot;'); }
+function addProduct(){
+  const menu = LS.get('e7_menu', []);
+  menu.push({id:'p'+Date.now(), cat:'pizzas', name:'Nouveau produit', desc:'', price:10, emoji:'🍕', vege:false, badge:'', avail:true});
+  LS.set('e7_menu', menu); renderMenu();
+  toast('➕ Produit ajouté — complétez ses informations');
+}
+function delProduct(i){
+  const menu = LS.get('e7_menu', []);
+  if(!confirm('Supprimer « '+menu[i].name+' » ?')) return;
+  menu.splice(i,1); LS.set('e7_menu', menu); renderMenu();
+}
+
+/* ═══════════ ZONES ═══════════ */
+function renderZones(){
+  const zones = LS.get('e7_zones', []);
+  $('zonesTable').innerHTML = `<tr><th>Nom de la zone</th><th class="w-price">Distance max (km)</th><th class="w-price">Frais (€)</th><th></th></tr>` +
+    zones.map((z,i)=>`<tr>
+      <td><input value="${esc(z.name)}" data-i="${i}" data-f="name"></td>
+      <td class="w-price"><input type="number" step="0.5" value="${z.maxKm}" data-i="${i}" data-f="maxKm"></td>
+      <td class="w-price"><input type="number" step="0.5" value="${z.fee}" data-i="${i}" data-f="fee"></td>
+      <td><button class="btn btn-red" onclick="delZone(${i})">✕</button></td>
+    </tr>`).join('');
+  $('zonesTable').querySelectorAll('input').forEach(el=>{
+    el.onchange = () => {
+      const zones = LS.get('e7_zones', []);
+      const z = zones[+el.dataset.i]; const f = el.dataset.f;
+      z[f] = f==='name' ? el.value : (parseFloat(el.value)||0);
+      LS.set('e7_zones', zones);
+      toast('✓ Zones mises à jour');
+    };
+  });
+  const s = LS.get('e7_settings', {});
+  $('setFreeFrom').value = s.freeDeliveryFrom ?? 30;
+  $('setMinOrder').value = s.minOrderDelivery ?? 15;
+}
+function addZone(){
+  const zones = LS.get('e7_zones', []);
+  zones.push({id:'z'+Date.now(), name:'Nouvelle zone', maxKm:10, fee:6});
+  LS.set('e7_zones', zones); renderZones();
+}
+function delZone(i){
+  const zones = LS.get('e7_zones', []);
+  zones.splice(i,1); LS.set('e7_zones', zones); renderZones();
+}
+function saveDeliverySettings(){
+  const s = LS.get('e7_settings', {});
+  s.freeDeliveryFrom = parseFloat($('setFreeFrom').value)||0;
+  s.minOrderDelivery = parseFloat($('setMinOrder').value)||0;
+  LS.set('e7_settings', s);
+  toast('✓ Conditions de livraison enregistrées');
+}
+
+/* ═══════════ PROMOS ═══════════ */
+function renderPromos(){
+  const promos = LS.get('e7_promos', []);
+  $('promosTable').innerHTML = `<tr><th>Code</th><th>Type</th><th class="w-price">Valeur</th><th class="w-price">Min. commande €</th><th class="w-sm">Actif</th><th></th></tr>` +
+    promos.map((p,i)=>`<tr>
+      <td><input value="${esc(p.code)}" data-i="${i}" data-f="code" style="text-transform:uppercase"></td>
+      <td><select data-i="${i}" data-f="type"><option value="percent"${p.type==='percent'?' selected':''}>% remise</option><option value="amount"${p.type==='amount'?' selected':''}>€ remise</option></select></td>
+      <td class="w-price"><input type="number" step="1" value="${p.value}" data-i="${i}" data-f="value"></td>
+      <td class="w-price"><input type="number" step="1" value="${p.min||0}" data-i="${i}" data-f="min"></td>
+      <td class="w-sm"><label class="switch"><input type="checkbox" ${p.active!==false?'checked':''} data-i="${i}" data-f="active"><span class="slider"></span></label></td>
+      <td><button class="btn btn-red" onclick="delPromo(${i})">✕</button></td>
+    </tr>`).join('');
+  $('promosTable').querySelectorAll('input,select').forEach(el=>{
+    el.onchange = () => {
+      const promos = LS.get('e7_promos', []);
+      const p = promos[+el.dataset.i]; const f = el.dataset.f;
+      if(f==='active') p.active = el.checked;
+      else if(f==='value'||f==='min') p[f] = parseFloat(el.value)||0;
+      else p[f] = el.value.toUpperCase();
+      LS.set('e7_promos', promos);
+      toast('✓ Promotions mises à jour');
+    };
+  });
+}
+function addPromo(){
+  const promos = LS.get('e7_promos', []);
+  promos.push({code:'PROMO'+Math.floor(Math.random()*100), type:'percent', value:10, min:0, active:true});
+  LS.set('e7_promos', promos); renderPromos();
+}
+function delPromo(i){
+  const promos = LS.get('e7_promos', []);
+  promos.splice(i,1); LS.set('e7_promos', promos); renderPromos();
+}
+
+/* ═══════════ RÉGLAGES ═══════════ */
+function renderSettings(){
+  const s = LS.get('e7_settings', {});
+  $('setAddress').value = s.address||''; $('setPhone').value = s.phone||'';
+  $('setWhatsapp').value = s.whatsapp||''; $('setHours').value = s.hours||'';
+  $('setLat').value = s.lat||''; $('setLng').value = s.lng||'';
+  $('setPrep').value = s.prepMinutes||20; $('setDeliv').value = s.deliveryMinutes||25;
+  $('setStripe').value = s.stripeLink||'';
+}
+function saveSettings(){
+  const s = LS.get('e7_settings', {});
+  s.address = $('setAddress').value; s.phone = $('setPhone').value;
+  s.whatsapp = $('setWhatsapp').value; s.hours = $('setHours').value;
+  s.lat = parseFloat($('setLat').value)||s.lat; s.lng = parseFloat($('setLng').value)||s.lng;
+  s.prepMinutes = parseInt($('setPrep').value)||20; s.deliveryMinutes = parseInt($('setDeliv').value)||25;
+  s.stripeLink = $('setStripe').value.trim();
+  LS.set('e7_settings', s);
+  const pin = $('setPin').value.trim();
+  if(pin){ LS.set('e7_admin_pin', pin); $('setPin').value=''; toast('🔑 Code d\'accès modifié'); }
+  toast('✓ Réglages enregistrés');
+}
+function resetAll(){
+  if(!confirm('Réinitialiser TOUTES les données (menu, commandes, comptes, réglages) ?')) return;
+  ['e7_settings','e7_menu','e7_zones','e7_promos','e7_orders','e7_users','e7_session','e7_cart','e7_lastOrder','e7_admin_pin'].forEach(k=>localStorage.removeItem(k));
+  toast('♻️ Données réinitialisées — rechargez le site client pour recréer le menu par défaut');
+  setTimeout(()=>location.reload(), 1500);
+}
+
+/* ═══════════ SYNC & INIT ═══════════ */
+function renderAll(){ renderDash(); renderOrders(); renderMenu(); renderZones(); renderPromos(); renderSettings(); }
+window.addEventListener('storage', e => {
+  if(e.key==='e7_orders'){ renderOrders(); renderDash(); toast('🔔 Nouvelle activité sur les commandes'); }
+});
+setInterval(()=>{ if(sessionStorage.getItem('e7_admin')){ renderOrders(); renderDash(); } }, 15000);
+if(sessionStorage.getItem('e7_admin')) showApp();
+</script>
+</body>
+</html>
