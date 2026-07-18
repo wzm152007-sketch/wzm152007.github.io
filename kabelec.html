@@ -199,6 +199,33 @@
     .about-list i{color:var(--green-dark);margin-top:5px}
     .about-list strong{font-weight:600;color:var(--ink)}
 
+    /* ============ Notre équipe ============ */
+    .team-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+    .member{
+      background:#fff;border:1px solid var(--line);border-radius:var(--radius-l);
+      padding:36px 28px 30px;text-align:center;
+      transition:transform .2s ease, box-shadow .2s ease;
+    }
+    .member:hover{transform:translateY(-4px);box-shadow:0 14px 34px rgba(15,23,42,.08)}
+    .avatar{
+      width:150px;height:150px;border-radius:50%;margin:0 auto 20px;
+      display:flex;align-items:center;justify-content:center;
+      font-family:'Montserrat',sans-serif;font-weight:800;font-size:2.4rem;color:#fff;
+      overflow:hidden;
+    }
+    .avatar img{width:100%;height:100%;object-fit:cover}
+    .avatar-green{background:var(--green-dark);box-shadow:0 0 0 4px #fff, 0 0 0 7px var(--green)}
+    .avatar-orange{background:var(--orange);box-shadow:0 0 0 4px #fff, 0 0 0 7px var(--orange)}
+    .avatar-blue{background:var(--blue);box-shadow:0 0 0 4px #fff, 0 0 0 7px var(--blue)}
+    .member h3{font-size:1.12rem;font-weight:700;margin-bottom:4px}
+    .member .role{
+      display:block;font-weight:600;font-size:.88rem;margin-bottom:12px;
+    }
+    .member:nth-child(1) .role{color:var(--green-dark)}
+    .member:nth-child(2) .role{color:var(--orange)}
+    .member:nth-child(3) .role{color:var(--blue)}
+    .member p{color:var(--muted);font-size:.93rem}
+
     /* ============ Contact ============ */
     .contact{border-top:1px solid var(--line)}
     .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px}
@@ -271,6 +298,7 @@
       .nav .btn{margin:10px 26px}
       .burger{display:flex;align-items:center;justify-content:center}
       .grid-3{grid-template-columns:1fr;gap:34px}
+      .team-grid{grid-template-columns:1fr;gap:34px}
       .steps{grid-template-columns:1fr 1fr;row-gap:44px}
       section{padding:70px 0}
       .card-wide{flex-wrap:wrap}
@@ -299,6 +327,7 @@
         <a href="#accueil">Accueil</a>
         <a href="#apropos">À propos</a>
         <a href="#demarche">Notre démarche</a>
+        <a href="#equipe">Notre équipe</a>
         <a href="#contact">Contact</a>
         <a href="#contact" class="btn btn-orange">Demander un audit gratuit</a>
       </nav>
@@ -416,6 +445,37 @@
       </div>
     </section>
 
+    <!-- ================= NOTRE ÉQUIPE ================= -->
+    <section id="equipe">
+      <div class="container">
+        <div class="sec-head reveal">
+          <span class="sec-tag">Notre équipe</span>
+          <h2>Des experts au service de votre performance énergétique</h2>
+          <p>Des interlocuteurs dédiés, qui connaissent votre dossier et vous accompagnent dans la durée.</p>
+        </div>
+        <div class="team-grid">
+          <article class="member reveal">
+            <div class="avatar avatar-green" aria-hidden="true">LB</div>
+            <h3>Louwens Biassou</h3>
+            <span class="role">Fondateur &amp; Consultant en stratégie énergétique</span>
+            <p>Expert en optimisation des coûts énergétiques et en négociation de contrats.</p>
+          </article>
+          <article class="member reveal">
+            <div class="avatar avatar-orange" aria-hidden="true">SE</div>
+            <h3>Sarah El Rahsi</h3>
+            <span class="role">Interlocutrice Relations Clients</span>
+            <p>Votre interlocutrice dédiée à chaque étape, de l'audit jusqu'au renouvellement.</p>
+          </article>
+          <article class="member reveal">
+            <div class="avatar avatar-blue" aria-hidden="true">TC</div>
+            <h3>Thibaut Cosnu</h3>
+            <span class="role">Consultant en énergie</span>
+            <p>Spécialiste des marchés de l'énergie et de l'analyse des opportunités pour nos clients.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
     <!-- ================= CONTACT ================= -->
     <section class="contact" id="contact">
       <div class="container contact-grid">
@@ -514,7 +574,7 @@
         });
       }, {threshold:.12});
       // Délai en cascade pour les cartes d'une même grille
-      document.querySelectorAll('.grid-3, .steps').forEach(function(grid){
+      document.querySelectorAll('.grid-3, .steps, .team-grid').forEach(function(grid){
         Array.prototype.forEach.call(grid.children, function(child, i){
           child.style.transitionDelay = (i * 90) + 'ms';
         });
