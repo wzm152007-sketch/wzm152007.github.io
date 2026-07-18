@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ÉCHELON 7 — Espace Administrateur</title>
+<title>L'ÉSCALIER — Espace Administrateur</title>
 <meta name="robots" content="noindex,nofollow">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👨‍🍳</text></svg>">
+<link rel="icon" type="image/png" href="favicon.png">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -23,20 +23,19 @@ input,select,textarea{font-family:inherit;font-size:.95rem}
 
 /* login */
 .login-screen{position:fixed;inset:0;background:radial-gradient(ellipse at 50% 30%,#2a2410 0%,var(--noir) 60%);display:flex;align-items:center;justify-content:center;z-index:100;padding:20px}
-.login-card{background:var(--blanc);border-radius:20px;padding:40px 34px;width:min(400px,100%);text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.5)}
-.login-card h1{font-size:1.6rem;margin:10px 0 4px}
-.login-card h1 span{color:var(--or)}
+.login-card{background:var(--noir2);border:1px solid rgba(201,162,39,.3);border-radius:20px;padding:40px 34px;width:min(400px,100%);text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.5);color:var(--gris-clair)}
+.login-card img{width:220px;max-width:100%;margin-bottom:14px}
 .login-card p{color:var(--gris);font-size:.88rem;margin-bottom:22px}
-.login-card input{width:100%;padding:13px 16px;border:1px solid var(--gris-clair);border-radius:12px;background:var(--ivoire);margin-bottom:12px;text-align:center;font-size:1.05rem}
+.login-card input{width:100%;padding:13px 16px;border:1px solid #333;border-radius:12px;background:var(--noir3);color:var(--blanc);margin-bottom:12px;text-align:center;font-size:1.05rem}
 .login-card input:focus{outline:none;border-color:var(--or)}
 
 /* layout */
 .app{display:none;grid-template-columns:230px 1fr;min-height:100vh}
 .app.on{display:grid}
 aside{background:var(--noir);color:var(--gris-clair);padding:24px 0;display:flex;flex-direction:column;position:sticky;top:0;height:100vh}
-.side-logo{font-family:'Playfair Display',serif;font-weight:900;font-size:1.3rem;color:var(--blanc);padding:0 24px 20px;letter-spacing:.08em;border-bottom:1px solid #222;margin-bottom:16px}
-.side-logo span{color:var(--or)}
-.side-logo small{display:block;font-family:'Jost',sans-serif;font-size:.68rem;letter-spacing:.25em;color:var(--gris);font-weight:400}
+.side-logo{padding:0 24px 20px;border-bottom:1px solid #222;margin-bottom:16px}
+.side-logo img{width:150px;display:block}
+.side-logo small{display:block;font-family:'Jost',sans-serif;font-size:.68rem;letter-spacing:.25em;color:var(--gris);font-weight:400;margin-top:8px}
 .side-nav{flex:1}
 .side-nav button{display:flex;align-items:center;gap:12px;width:100%;background:none;border:none;color:var(--gris-clair);padding:13px 24px;font-size:.92rem;transition:var(--trans);border-left:3px solid transparent;text-align:left}
 .side-nav button:hover{color:var(--or)}
@@ -142,19 +141,18 @@ td input:focus{outline:none;border-color:var(--or)}
 <!-- LOGIN -->
 <div class="login-screen" id="loginScreen">
   <div class="login-card">
-    <div style="font-size:2.6rem">👨‍🍳</div>
-    <h1>ÉCHELON<span>7</span></h1>
+    <img src="logo.webp" alt="L'Éscalier Restaurant">
     <p>Espace administrateur — accès réservé</p>
     <input type="password" id="pinInput" placeholder="Code d'accès" autocomplete="current-password">
     <button class="btn btn-gold" style="width:100%;padding:13px;font-size:.95rem" onclick="tryLogin()">Se connecter</button>
-    <p style="margin-top:14px;font-size:.75rem">Code par défaut : <b>echelon7</b> (modifiable dans Réglages)</p>
+    <p style="margin-top:14px;font-size:.75rem">Code par défaut : <b>escalier</b> (modifiable dans Réglages)</p>
   </div>
 </div>
 
 <!-- APP -->
 <div class="app" id="app">
   <aside>
-    <div class="side-logo">ÉCHELON<span>7</span><small>ADMINISTRATION</small></div>
+    <div class="side-logo"><img src="logo.webp" alt="L'Éscalier Restaurant"><small>ADMINISTRATION</small></div>
     <nav class="side-nav" id="sideNav">
       <button data-page="dash" class="active">📊 <span>Tableau de bord</span></button>
       <button data-page="orders">🧾 <span>Commandes</span><span class="cnt" id="pendingCnt" style="display:none">0</span></button>
@@ -245,7 +243,7 @@ td input:focus{outline:none;border-color:var(--or)}
 <div id="toasts"></div>
 
 <script>
-/* ═════ ÉCHELON 7 — Administration (localStorage partagé avec index.html) ═════ */
+/* ═════ L'ÉSCALIER — Administration (localStorage partagé avec index.html) ═════ */
 const LS = {
   get(k, fb){ try{ const v = localStorage.getItem(k); return v ? JSON.parse(v) : fb; }catch(e){ return fb; } },
   set(k, v){ localStorage.setItem(k, JSON.stringify(v)); }
@@ -264,7 +262,7 @@ function toast(msg){
 }
 
 /* ── Auth ── */
-function adminPin(){ return LS.get('e7_admin_pin', 'echelon7'); }
+function adminPin(){ return LS.get('e7_admin_pin', 'escalier'); }
 function tryLogin(){
   if($('pinInput').value === adminPin()){
     sessionStorage.setItem('e7_admin','1');
