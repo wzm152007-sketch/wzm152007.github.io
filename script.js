@@ -15,6 +15,7 @@ function closeMenu() {
   const menuLabel = menuToggle?.querySelector('.sr-only');
   if (menuLabel) menuLabel.textContent = 'Ouvrir le menu';
   nav?.classList.remove('open');
+  document.body.classList.remove('menu-open');
 }
 
 menuToggle?.addEventListener('click', () => {
@@ -23,6 +24,7 @@ menuToggle?.addEventListener('click', () => {
   const menuLabel = menuToggle.querySelector('.sr-only');
   if (menuLabel) menuLabel.textContent = willOpen ? 'Fermer le menu' : 'Ouvrir le menu';
   nav?.classList.toggle('open', willOpen);
+  document.body.classList.toggle('menu-open', willOpen);
 });
 
 nav?.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeMenu));
@@ -30,7 +32,91 @@ window.addEventListener('resize', () => {
   if (window.innerWidth > 900) closeMenu();
 });
 
-/* ——— Données de la carte ——— */
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('is-visible');
+      revealObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.12 });
+
+document.querySelectorAll('.reveal').forEach((element) => revealObserver.observe(element));
+
+const motionPhotos = [...document.querySelectorAll('[data-motion-photo]')];
+const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+let photoMotionFrame = 0;
+
+const playPhotoFeedback = (photo) => {
+  if (reducedMotionQuery.matches) return;
+  photo.classList.remove('is-photo-clicked');
+  window.requestAnimationFrame(() => photo.classList.add('is-photo-clicked'));
+};
+
+const revealMotionPhoto = (photo) => {
+  const image = photo.querySelector('img');
+  const showPhoto = () => photo.classList.add('is-photo-visible');
+  if (!image || image.complete) showPhoto();
+  else {
+    image.addEventListener('load', showPhoto, { once: true });
+    image.addEventListener('error', showPhoto, { once: true });
+  }
+};
+
+const photoRevealObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (!entry.isIntersecting) return;
+    revealMotionPhoto(entry.target);
+    photoRevealObserver.unobserve(entry.target);
+  });
+}, { threshold: 0.18, rootMargin: '0px 0px -8% 0px' });
+
+const updatePhotoParallax = () => {
+  photoMotionFrame = 0;
+  if (reducedMotionQuery.matches) {
+    motionPhotos.forEach((photo) => photo.style.setProperty('--photo-shift', '0px'));
+    return;
+  }
+
+  const viewportHeight = window.innerHeight;
+  motionPhotos.forEach((photo) => {
+    const rect = photo.getBoundingClientRect();
+    if (rect.bottom < 0 || rect.top > viewportHeight) return;
+    const strength = Number(photo.dataset.parallax) || 14;
+    const distanceFromCenter = (rect.top + rect.height / 2 - viewportHeight / 2) / (viewportHeight + rect.height);
+    const shift = Math.max(-strength, Math.min(strength, -distanceFromCenter * strength * 2));
+    photo.style.setProperty('--photo-shift', `${shift.toFixed(2)}px`);
+  });
+};
+
+const requestPhotoParallax = () => {
+  if (photoMotionFrame) return;
+  photoMotionFrame = window.requestAnimationFrame(updatePhotoParallax);
+};
+
+motionPhotos.forEach((photo) => {
+  photo.classList.add('is-motion-ready');
+  if (reducedMotionQuery.matches) photo.classList.add('is-photo-visible');
+  else photoRevealObserver.observe(photo);
+
+  photo.addEventListener('click', () => playPhotoFeedback(photo));
+  photo.addEventListener('keydown', (event) => {
+    if (event.key !== 'Enter' && event.key !== ' ') return;
+    event.preventDefault();
+    playPhotoFeedback(photo);
+  });
+  photo.addEventListener('animationend', (event) => {
+    if (event.animationName === 'photo-frame-pulse') photo.classList.remove('is-photo-clicked');
+  });
+});
+
+window.addEventListener('scroll', requestPhotoParallax, { passive: true });
+window.addEventListener('resize', requestPhotoParallax, { passive: true });
+reducedMotionQuery.addEventListener?.('change', () => {
+  motionPhotos.forEach((photo) => photo.classList.add('is-photo-visible'));
+  requestPhotoParallax();
+});
+requestPhotoParallax();
 
 const specialties = [
   ['Bananéa', 'Banane, lait, noisette et amande', '6,00 €'],
@@ -132,45 +218,60 @@ const fullMenu = [
   ['desserts', 'Pâtisserie au Choix Fait Maison', '', '4,50 €']
 ];
 
-/* ——— La carte : onglets par catégorie ——— */
+const juiceList = document.querySelector('[data-juice-list]');
+if (juiceList) {
+  juiceList.innerHTML = specialties.map(([name, description, price], index) => `
+    <article class="juice-item">
+      <span class="juice-index">${String(index + 1).padStart(2, '0')}</span>
+      <div class="juice-copy"><h3>${name}</h3><p>${description}</p></div>
+      <strong class="juice-price">${price}</strong>
+    </article>
+  `).join('');
+}
 
-const tabsWrap = document.querySelector('[data-menu-tabs]');
-const panel = document.querySelector('[data-menu-panel]');
-if (tabsWrap && panel) {
-  panel.id = 'menu-panel';
-  panel.setAttribute('role', 'tabpanel');
+// La carte : un onglet par catégorie, la page se met à jour instantanément.
+const menuBoard = document.querySelector('[data-menu-board]');
+if (menuBoard) {
+  const tabsWrap = menuBoard.querySelector('[data-menu-tabs]');
+  const page = menuBoard.querySelector('[data-menu-page]');
 
-  const renderCategory = (categoryId) => {
+  const renderCategory = (index) => {
+    const [categoryId, label] = menuCategories[index];
     const items = fullMenu.filter(([c]) => c === categoryId);
-    panel.innerHTML = `<ul class="menu-list">${items.map(([, name, description, price]) => `
+    const itemsMarkup = items.map(([, name, description, price]) => `
       <li class="menu-item">
-        <h3>${name}</h3>
-        <span class="price">${price}</span>
+        <div class="menu-item-head"><h3>${name}</h3><strong>${price}</strong></div>
         ${description ? `<p>${description}</p>` : ''}
-      </li>`).join('')}</ul>`;
+      </li>`).join('');
+    page.innerHTML = `
+      <div class="menu-page-head">
+        <span class="menu-page-index">${String(index + 1).padStart(2, '0')}</span>
+        <h3 class="menu-page-title">${label}</h3>
+        <span class="menu-page-count">${items.length} choix</span>
+      </div>
+      <ul class="menu-list">${itemsMarkup}</ul>`;
   };
 
-  const selectTab = (button) => {
-    tabsWrap.querySelectorAll('.menu-tab').forEach((tab) => {
-      tab.setAttribute('aria-selected', String(tab === button));
-      tab.tabIndex = tab === button ? 0 : -1;
+  const selectTab = (index) => {
+    tabsWrap.querySelectorAll('.menu-tab').forEach((tab, i) => {
+      tab.setAttribute('aria-selected', String(i === index));
+      tab.tabIndex = i === index ? 0 : -1;
     });
-    renderCategory(button.dataset.category);
+    renderCategory(index);
   };
 
   menuCategories.forEach(([categoryId, label], index) => {
     const count = fullMenu.filter(([c]) => c === categoryId).length;
-    const button = document.createElement('button');
-    button.type = 'button';
-    button.className = 'menu-tab';
-    button.dataset.category = categoryId;
-    button.setAttribute('role', 'tab');
-    button.setAttribute('aria-selected', String(index === 0));
-    button.setAttribute('aria-controls', 'menu-panel');
-    button.tabIndex = index === 0 ? 0 : -1;
-    button.innerHTML = `${label} <small>(${count})</small>`;
-    button.addEventListener('click', () => selectTab(button));
-    tabsWrap.appendChild(button);
+    const tab = document.createElement('button');
+    tab.type = 'button';
+    tab.className = 'menu-tab';
+    tab.setAttribute('role', 'tab');
+    tab.setAttribute('aria-selected', String(index === 0));
+    tab.setAttribute('aria-controls', 'menu-page');
+    tab.tabIndex = index === 0 ? 0 : -1;
+    tab.innerHTML = `${label} <small>${count}</small>`;
+    tab.addEventListener('click', () => selectTab(index));
+    tabsWrap.appendChild(tab);
   });
 
   tabsWrap.addEventListener('keydown', (event) => {
@@ -181,26 +282,11 @@ if (tabsWrap && panel) {
     event.preventDefault();
     const next = (current + (event.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length;
     tabs[next].focus();
-    selectTab(tabs[next]);
+    selectTab(next);
   });
 
-  renderCategory(menuCategories[0][0]);
+  renderCategory(0);
 }
-
-/* ——— Spécialités : jus maison ——— */
-
-const juiceList = document.querySelector('[data-juice-list]');
-if (juiceList) {
-  juiceList.innerHTML = specialties.map(([name, description, price]) => `
-    <article class="juice-item">
-      <h3>${name}</h3>
-      <span class="price">${price}</span>
-      <p>${description}</p>
-    </article>
-  `).join('');
-}
-
-/* ——— Réservation ——— */
 
 document.querySelectorAll('[data-open-booking]').forEach((button) => {
   button.addEventListener('click', () => {
@@ -233,8 +319,7 @@ if (dateInput) {
 
 document.querySelector('[data-year]').textContent = new Date().getFullYear();
 
-/* ——— Retour en haut ——— */
-
+// Bouton retour en haut : apparaît au défilement, remonte au hero
 const backToTop = document.querySelector('[data-back-to-top]');
 if (backToTop) {
   const toggleBackToTop = () => {

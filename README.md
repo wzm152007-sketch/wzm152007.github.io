@@ -1,18 +1,16 @@
 # Site vitrine — L’Escalier
 
-Site statique responsive pour la pizzeria L’Escalier (34 rue de l’Estrey, 88440 Nomexy), dans une version épurée : mise en page aérée, typographie sobre et carte organisée par catégories.
+Site statique responsive pour la pizzeria L’Escalier (34 rue de l’Estrey, 88440 Nomexy). Le design d’origine est conservé (vert profond, jaune, typographie serif, animations douces) ; la navigation a été modernisée et simplifiée.
 
 ## Aperçu
 
 Ouvrez simplement `index.html` dans un navigateur. Aucun téléchargement ni installation n’est nécessaire : HTML, CSS et JavaScript sans dépendance externe.
 
-## Organisation du contenu
+## Simplifications apportées
 
-- **La carte** : 72 produits répartis en 9 catégories (pizzas sauce tomate, pizzas crème fraîche, omelettes, sandwiches, tex-mex, smoothies, mojitos sans alcool, boissons chaudes, desserts), navigables par onglets.
-- **Spécialités** : les 10 jus maison aux fruits à coque, affichés en grille.
-- **Formules** : les 3 box à partager et le menu Bambino.
-- **Notre maison** et **Contact** : présentation, adresse, téléphones et carte Google Maps.
-- Mentions légales, politique de confidentialité et CGV dans le pied de page (champs `[à compléter]` à renseigner).
+- **La carte** : les 72 produits en 9 catégories s’affichent via des onglets — un clic sur une catégorie montre tous ses plats d’un coup, au lieu du feuilletage page par page.
+- **Spécialités** : les 10 jus maison sont visibles directement, sans bouton à déplier.
+- **Formules** : les 3 box et le menu Bambino sont affichés en grille complète, sans carrousel à flèches.
 
 ## Contenu à personnaliser avant publication
 
@@ -20,3 +18,4 @@ Ouvrez simplement `index.html` dans un navigateur. Aucun téléchargement ni ins
 - Les horaires ne figurent pas encore sur le site et devront être ajoutés.
 - Le formulaire de réservation est une démonstration : il renvoie vers l’appel téléphonique et n’envoie aucune donnée.
 - Les deux numéros de téléphone proviennent de l’enseigne visible sur la photo de façade.
+- Les mentions légales, la politique de confidentialité et les CGV comportent des champs `[à compléter]`.
