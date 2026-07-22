@@ -129,12 +129,64 @@
 
     /* ============ Hero (sombre) ============ */
     .hero{
+      position:relative;overflow:hidden;
       background:
         radial-gradient(900px 420px at 15% -10%, rgba(124,58,237,.35), transparent 60%),
         radial-gradient(800px 400px at 90% 0%, rgba(6,182,212,.28), transparent 55%),
         var(--bg-dark);
       color:#fff;text-align:center;padding:112px 0 108px;
     }
+    .hero .container{position:relative;z-index:2}
+
+    /* Code qui défile en fond du hero */
+    .code-bg{
+      position:absolute;inset:0;z-index:1;pointer-events:none;
+      display:flex;justify-content:space-between;
+      -webkit-mask-image:linear-gradient(180deg, transparent 0%, #000 18%, #000 82%, transparent 100%);
+      mask-image:linear-gradient(180deg, transparent 0%, #000 18%, #000 82%, transparent 100%);
+    }
+    .code-col{
+      font-family:'Courier New',ui-monospace,monospace;
+      font-size:13px;line-height:1.9;white-space:pre;text-align:left;
+      color:rgba(148,190,255,.16);
+    }
+    .code-col .c1{color:rgba(6,182,212,.22)}
+    .code-col .c2{color:rgba(167,139,250,.22)}
+    .code-col .c3{color:rgba(163,230,53,.18)}
+    @keyframes codeScroll{from{transform:translateY(0)}to{transform:translateY(-50%)}}
+    .code-col-l{animation:codeScroll 46s linear infinite;margin-left:2vw}
+    .code-col-r{animation:codeScroll 34s linear infinite;margin-right:2vw}
+    @media (max-width:900px){.code-col-r{display:none}.code-col{font-size:11px}}
+
+    /* Bandeaux défilants (marquee) */
+    .marquee{
+      overflow:hidden;background:var(--bg-dark);
+      border-top:1px solid var(--line-d);border-bottom:1px solid var(--line-d);
+      padding:16px 0;position:relative;
+    }
+    .marquee-track{
+      display:flex;align-items:center;gap:44px;width:max-content;
+      animation:marqueeMove 30s linear infinite;
+    }
+    @keyframes marqueeMove{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+    .marquee-item{
+      display:inline-flex;align-items:center;gap:44px;white-space:nowrap;
+      font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:.95rem;
+      letter-spacing:.09em;text-transform:uppercase;color:#fff;
+    }
+    .marquee-item i{color:var(--cyan);font-size:.7rem}
+    .marquee-item .hl{color:var(--lime)}
+    .marquee-code .marquee-track{animation:marqueeMoveR 38s linear infinite}
+    @keyframes marqueeMoveR{from{transform:translateX(-50%)}to{transform:translateX(0)}}
+    .marquee-code{background:#0D1428}
+    .marquee-code .marquee-item{
+      font-family:'Courier New',ui-monospace,monospace;font-weight:400;
+      text-transform:none;letter-spacing:0;font-size:.9rem;color:rgba(154,167,189,.85);
+    }
+    .marquee-code .marquee-item .k{color:var(--violet)}
+    .marquee-code .marquee-item .s{color:var(--lime)}
+    .marquee-code .marquee-item .f{color:var(--cyan)}
+    .marquee:hover .marquee-track{animation-play-state:paused}
     .hero-badge{
       display:inline-flex;align-items:center;gap:.55em;
       font-weight:600;font-size:.82rem;letter-spacing:.07em;text-transform:uppercase;
@@ -400,6 +452,80 @@
   <main>
     <!-- ================= HERO ================= -->
     <section class="hero" id="accueil">
+      <div class="code-bg" aria-hidden="true">
+        <div class="code-col code-col-l">
+<span class="c1">&lt;!DOCTYPE html&gt;</span>
+&lt;html lang="fr"&gt;
+  &lt;head&gt;
+    &lt;title&gt;<span class="c3">Votre site&lt;/title&gt;</span>
+  &lt;/head&gt;
+  &lt;body&gt;
+    <span class="c2">&lt;header class="hero"&gt;</span>
+      &lt;h1&gt;Bienvenue&lt;/h1&gt;
+    &lt;/header&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+
+<span class="c1">.site {</span>
+  design: <span class="c3">sur-mesure</span>;
+  vitesse: <span class="c3">maximale</span>;
+  mobile: <span class="c3">100%</span>;
+<span class="c1">}</span>
+
+<span class="c2">const</span> livraison = <span class="c3">"24h"</span>;
+<span class="c2">await</span> neyweb.build();
+
+<span class="c1">&lt;!DOCTYPE html&gt;</span>
+&lt;html lang="fr"&gt;
+  &lt;head&gt;
+    &lt;title&gt;<span class="c3">Votre site&lt;/title&gt;</span>
+  &lt;/head&gt;
+  &lt;body&gt;
+    <span class="c2">&lt;header class="hero"&gt;</span>
+      &lt;h1&gt;Bienvenue&lt;/h1&gt;
+    &lt;/header&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+
+<span class="c1">.site {</span>
+  design: <span class="c3">sur-mesure</span>;
+  vitesse: <span class="c3">maximale</span>;
+  mobile: <span class="c3">100%</span>;
+<span class="c1">}</span>
+
+<span class="c2">const</span> livraison = <span class="c3">"24h"</span>;
+<span class="c2">await</span> neyweb.build();
+</div>
+        <div class="code-col code-col-r">
+<span class="c2">function</span> <span class="c1">creerSite</span>(client) {
+  <span class="c2">const</span> brief = ecouter(client);
+  <span class="c2">const</span> design = surMesure(brief);
+  <span class="c2">return</span> enLigne(design, <span class="c3">"24h"</span>);
+}
+
+<span class="c1">@media</span> (max-width: 560px) {
+  .site { parfait: <span class="c3">aussi</span>; }
+}
+
+seo.optimiser(<span class="c3">"Google"</span>);
+form.envoyer(<span class="c3">"direct"</span>);
+client.satisfait = <span class="c2">true</span>;
+
+<span class="c2">function</span> <span class="c1">creerSite</span>(client) {
+  <span class="c2">const</span> brief = ecouter(client);
+  <span class="c2">const</span> design = surMesure(brief);
+  <span class="c2">return</span> enLigne(design, <span class="c3">"24h"</span>);
+}
+
+<span class="c1">@media</span> (max-width: 560px) {
+  .site { parfait: <span class="c3">aussi</span>; }
+}
+
+seo.optimiser(<span class="c3">"Google"</span>);
+form.envoyer(<span class="c3">"direct"</span>);
+client.satisfait = <span class="c2">true</span>;
+</div>
+      </div>
       <div class="container">
         <span class="hero-badge anim d1"><i class="fa-solid fa-bolt" aria-hidden="true"></i> Développeur web · Livraison express</span>
         <h1 class="anim d2">Votre site web professionnel,<br>livré en <span class="grad-text">24 heures</span>.</h1>
@@ -415,6 +541,30 @@
         </div>
       </div>
     </section>
+
+    <!-- ================= BANDEAU DÉFILANT ================= -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee-track">
+        <span class="marquee-item">
+          Site livré en <span class="hl">&nbsp;24h</span> <i class="fa-solid fa-star" aria-hidden="true"></i>
+          Design sur-mesure <i class="fa-solid fa-star" aria-hidden="true"></i>
+          100% responsive <i class="fa-solid fa-star" aria-hidden="true"></i>
+          SEO inclus <i class="fa-solid fa-star" aria-hidden="true"></i>
+          Stratégie marketing <span class="hl">&nbsp;offerte</span> <i class="fa-solid fa-star" aria-hidden="true"></i>
+          Devis gratuit <i class="fa-solid fa-star" aria-hidden="true"></i>
+          À partir de <span class="hl">&nbsp;250 €</span> <i class="fa-solid fa-star" aria-hidden="true"></i>
+        </span>
+        <span class="marquee-item">
+          Site livré en <span class="hl">&nbsp;24h</span> <i class="fa-solid fa-star" aria-hidden="true"></i>
+          Design sur-mesure <i class="fa-solid fa-star" aria-hidden="true"></i>
+          100% responsive <i class="fa-solid fa-star" aria-hidden="true"></i>
+          SEO inclus <i class="fa-solid fa-star" aria-hidden="true"></i>
+          Stratégie marketing <span class="hl">&nbsp;offerte</span> <i class="fa-solid fa-star" aria-hidden="true"></i>
+          Devis gratuit <i class="fa-solid fa-star" aria-hidden="true"></i>
+          À partir de <span class="hl">&nbsp;250 €</span> <i class="fa-solid fa-star" aria-hidden="true"></i>
+        </span>
+      </div>
+    </div>
 
     <!-- ================= PROCESS 24H ================= -->
     <section id="process">
@@ -627,6 +777,26 @@
         </div>
       </div>
     </section>
+
+    <!-- ================= BANDEAU CODE DÉFILANT ================= -->
+    <div class="marquee marquee-code" aria-hidden="true">
+      <div class="marquee-track">
+        <span class="marquee-item">
+          <span><span class="k">const</span> votreSite = <span class="f">neyweb.build</span>(<span class="s">"24h"</span>);</span>
+          <span>&lt;h1&gt;<span class="s">Votre entreprise en ligne</span>&lt;/h1&gt;</span>
+          <span>.design { style: <span class="s">sur-mesure</span>; }</span>
+          <span><span class="f">seo.optimiser</span>(<span class="s">"Google"</span>);</span>
+          <span><span class="k">return</span> <span class="s">"client satisfait"</span>;</span>
+        </span>
+        <span class="marquee-item">
+          <span><span class="k">const</span> votreSite = <span class="f">neyweb.build</span>(<span class="s">"24h"</span>);</span>
+          <span>&lt;h1&gt;<span class="s">Votre entreprise en ligne</span>&lt;/h1&gt;</span>
+          <span>.design { style: <span class="s">sur-mesure</span>; }</span>
+          <span><span class="f">seo.optimiser</span>(<span class="s">"Google"</span>);</span>
+          <span><span class="k">return</span> <span class="s">"client satisfait"</span>;</span>
+        </span>
+      </div>
+    </div>
 
     <!-- ================= CONTACT ================= -->
     <section class="contact" id="contact">
