@@ -39,9 +39,9 @@
       "@type": "OfferCatalog",
       "name": "Création de sites web",
       "itemListElement": [
-        {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Site vitrine en 24h", "description": "Site une page complet, design sur-mesure, responsive, SEO de base et formulaire de contact."}},
-        {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Refonte de site existant", "description": "Modernisation complète du design et des performances d'un site existant."}},
-        {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Évolutions et maintenance", "description": "Ajout de sections, mises à jour de contenu et suivi après livraison."}}
+        {"@type": "Offer", "price": "250", "priceCurrency": "EUR", "itemOffered": {"@type": "Service", "name": "Essentiel — Site vitrine en 24h", "description": "Site une page complet, design sur-mesure, responsive, SEO de base, formulaire de contact et stratégie marketing offerte."}},
+        {"@type": "Offer", "price": "450", "priceCurrency": "EUR", "itemOffered": {"@type": "Service", "name": "Pro — Site multi-sections en 24-48h", "description": "Site enrichi, SEO renforcé, fiche Google Business configurée et stratégie marketing offerte."}},
+        {"@type": "Offer", "price": "750", "priceCurrency": "EUR", "itemOffered": {"@type": "Service", "name": "Boutique — Site e-commerce en 48-72h", "description": "Boutique en ligne complète avec paiement sécurisé, premiers produits en ligne et stratégie marketing offerte."}}
       ]
     }
   }
@@ -211,6 +211,45 @@
     .card h3{font-size:1.08rem;font-weight:600;margin-bottom:8px}
     .card p{color:var(--muted);font-size:.94rem}
 
+    /* ============ Tarifs ============ */
+    .price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;align-items:stretch}
+    .price-card{
+      position:relative;background:#fff;border:1px solid var(--line);
+      border-radius:var(--radius-l);padding:36px 28px 30px;
+      display:flex;flex-direction:column;
+      transition:transform .2s ease, box-shadow .2s ease;
+    }
+    .price-card:hover{transform:translateY(-4px);box-shadow:0 14px 34px rgba(15,23,42,.08)}
+    .price-card.featured{
+      border:2px solid transparent;
+      background:
+        linear-gradient(#fff,#fff) padding-box,
+        linear-gradient(135deg,var(--violet),var(--cyan)) border-box;
+      box-shadow:0 14px 40px rgba(124,58,237,.14);
+    }
+    .price-pop{
+      position:absolute;top:-15px;left:50%;transform:translateX(-50%);
+      font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:.78rem;
+      letter-spacing:.06em;text-transform:uppercase;color:#fff;
+      background:linear-gradient(92deg,var(--violet),var(--cyan));
+      border-radius:999px;padding:6px 18px;white-space:nowrap;
+    }
+    .price-name{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:1.05rem;margin-bottom:4px}
+    .price-for{color:var(--muted);font-size:.88rem;margin-bottom:18px}
+    .price-amount{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:2.6rem;line-height:1;margin-bottom:4px}
+    .price-amount small{font-size:1rem;font-weight:600;color:var(--muted)}
+    .price-delay{color:var(--muted);font-size:.85rem;margin-bottom:22px}
+    .price-list{list-style:none;margin-bottom:26px;flex:1}
+    .price-list li{display:flex;gap:11px;align-items:flex-start;margin-bottom:11px;font-size:.93rem}
+    .price-list i{color:var(--cyan);margin-top:5px;font-size:.8rem}
+    .price-list li.gift{
+      font-weight:600;color:var(--violet);
+      border-top:1px dashed var(--line);padding-top:13px;margin-top:13px;
+    }
+    .price-list li.gift i{color:var(--violet);font-size:.95rem;margin-top:2px}
+    .price-card .btn{width:100%;justify-content:center}
+    .price-note{text-align:center;color:var(--muted);font-size:.88rem;margin-top:28px}
+
     /* ============ Portfolio ============ */
     .work{
       display:grid;grid-template-columns:1.15fr 1fr;gap:48px;align-items:center;
@@ -320,6 +359,7 @@
       .nav .btn{margin:10px 26px}
       .burger{display:flex;align-items:center;justify-content:center}
       .grid-3{grid-template-columns:1fr;gap:24px}
+      .price-grid{grid-template-columns:1fr;gap:34px}
       .steps{grid-template-columns:1fr 1fr;row-gap:42px}
       section{padding:72px 0}
     }
@@ -346,6 +386,7 @@
         <a href="#accueil">Accueil</a>
         <a href="#process">Comment ça marche</a>
         <a href="#inclus">Ce qui est inclus</a>
+        <a href="#tarifs">Tarifs</a>
         <a href="#realisations">Réalisations</a>
         <a href="#contact">Contact</a>
         <a href="#contact" class="btn btn-grad">Démarrer mon site</a>
@@ -452,6 +493,67 @@
             <p>Contrastes soignés, navigation clavier, compatible lecteurs d'écran : un site ouvert à tous.</p>
           </article>
         </div>
+      </div>
+    </section>
+
+    <!-- ================= TARIFS ================= -->
+    <section id="tarifs">
+      <div class="container">
+        <div class="sec-head reveal">
+          <span class="sec-tag">Tarifs</span>
+          <h2>Des prix simples, tout compris</h2>
+          <p>Un tarif annoncé avant de commencer, sans frais cachés — et la stratégie marketing est offerte avec chaque site.</p>
+        </div>
+        <div class="price-grid">
+          <article class="price-card reveal">
+            <h3 class="price-name">Essentiel</h3>
+            <p class="price-for">Pour démarrer votre présence en ligne</p>
+            <p class="price-amount">250 <small>€</small></p>
+            <p class="price-delay"><i class="fa-solid fa-bolt" aria-hidden="true"></i> Livré en 24h</p>
+            <ul class="price-list">
+              <li><i class="fa-solid fa-check" aria-hidden="true"></i> Site une page complet (accueil, services, contact)</li>
+              <li><i class="fa-solid fa-check" aria-hidden="true"></i> Design sur-mesure à vos couleurs</li>
+              <li><i class="fa-solid fa-check" aria-hidden="true"></i> Responsive mobile, tablette, ordinateur</li>
+              <li><i class="fa-solid fa-check" aria-hidden="true"></i> Formulaire de contact direct en boîte mail</li>
+              <li><i class="fa-solid fa-check" aria-hidden="true"></i> SEO de base pour Google</li>
+              <li><i class="fa-solid fa-check" aria-hidden="true"></i> 1 série de retouches incluse</li>
+              <li class="gift"><i class="fa-solid fa-gift" aria-hidden="true"></i> Stratégie marketing offerte</li>
+            </ul>
+            <a href="#contact" class="btn btn-dark">Choisir Essentiel</a>
+          </article>
+          <article class="price-card featured reveal">
+            <span class="price-pop">Le plus choisi</span>
+            <h3 class="price-name">Pro</h3>
+            <p class="price-for">Pour une présence complète et crédible</p>
+            <p class="price-amount">450 <small>€</small></p>
+            <p class="price-delay"><i class="fa-solid fa-bolt" aria-hidden="true"></i> Livré en 24h à 48h</p>
+            <ul class="price-list">
+              <li><i class="fa-solid fa-check" aria-hidden="true"></i> Tout de l'offre Essentiel</li>
+              <li><i class="fa-solid fa-check" aria-hidden="true"></i> Site multi-sections enrichi (équipe, réalisations, FAQ…)</li>
+              <li><i class="fa-solid fa-check" aria-hidden="true"></i> SEO renforcé : données structurées, sitemap, Open Graph</li>
+              <li><i class="fa-solid fa-check" aria-hidden="true"></i> Fiche Google Business configurée</li>
+              <li><i class="fa-solid fa-check" aria-hidden="true"></i> 2 séries de retouches incluses</li>
+              <li class="gift"><i class="fa-solid fa-gift" aria-hidden="true"></i> Stratégie marketing offerte</li>
+            </ul>
+            <a href="#contact" class="btn btn-grad">Choisir Pro</a>
+          </article>
+          <article class="price-card reveal">
+            <h3 class="price-name">Boutique</h3>
+            <p class="price-for">Pour vendre vos produits en ligne</p>
+            <p class="price-amount">750 <small>€</small></p>
+            <p class="price-delay"><i class="fa-solid fa-bolt" aria-hidden="true"></i> Livré en 48h à 72h</p>
+            <ul class="price-list">
+              <li><i class="fa-solid fa-check" aria-hidden="true"></i> Boutique en ligne complète, paiement sécurisé</li>
+              <li><i class="fa-solid fa-check" aria-hidden="true"></i> Mise en ligne de vos premiers produits</li>
+              <li><i class="fa-solid fa-check" aria-hidden="true"></i> Design fidèle à votre marque</li>
+              <li><i class="fa-solid fa-check" aria-hidden="true"></i> SEO + réseaux sociaux connectés</li>
+              <li><i class="fa-solid fa-check" aria-hidden="true"></i> Accompagnement à la prise en main</li>
+              <li class="gift"><i class="fa-solid fa-gift" aria-hidden="true"></i> Stratégie marketing offerte</li>
+            </ul>
+            <a href="#contact" class="btn btn-dark">Choisir Boutique</a>
+          </article>
+        </div>
+        <p class="price-note reveal"><i class="fa-solid fa-circle-info" aria-hidden="true"></i> Devis gratuit et sans engagement — chaque projet est ajusté à vos besoins réels avant de commencer.</p>
       </div>
     </section>
 
@@ -615,7 +717,7 @@
           }
         });
       }, {threshold:.12});
-      document.querySelectorAll('.grid-3, .steps, .why-grid').forEach(function(grid){
+      document.querySelectorAll('.grid-3, .steps, .why-grid, .price-grid').forEach(function(grid){
         Array.prototype.forEach.call(grid.children, function(child, i){
           child.style.transitionDelay = (i * 90) + 'ms';
         });
