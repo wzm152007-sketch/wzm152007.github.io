@@ -158,6 +158,19 @@
     .code-col-r{animation:codeScroll 34s linear infinite;margin-right:2vw}
     @media (max-width:900px){.code-col-r{display:none}.code-col{font-size:11px}}
 
+    /* Code défilant en fond sur toute la page (sections claires) */
+    .code-page{
+      position:fixed;inset:0;z-index:0;pointer-events:none;
+      display:flex;justify-content:space-between;overflow:hidden;
+    }
+    .code-page .code-col{color:rgba(15,23,42,.055)}
+    .code-page .code-col .c1{color:rgba(6,182,212,.10)}
+    .code-page .code-col .c2{color:rgba(124,58,237,.10)}
+    .code-page .code-col .c3{color:rgba(22,163,74,.09)}
+    .code-page .code-col-l{animation-duration:64s}
+    .code-page .code-col-r{animation-duration:48s}
+    .header,main,.footer{position:relative;z-index:1}
+
     /* Bandeaux défilants (marquee) */
     .marquee{
       overflow:hidden;background:var(--bg-dark);
@@ -426,6 +439,224 @@
   </style>
 </head>
 <body>
+
+  <!-- Code défilant en fond de page -->
+  <div class="code-page" aria-hidden="true">
+    <div class="code-col code-col-l">
+<span class="c1">&lt;!DOCTYPE html&gt;</span>
+&lt;html lang="fr"&gt;
+  &lt;head&gt;
+    &lt;title&gt;<span class="c3">Votre site&lt;/title&gt;</span>
+  &lt;/head&gt;
+  &lt;body&gt;
+    <span class="c2">&lt;header class="hero"&gt;</span>
+      &lt;h1&gt;Bienvenue&lt;/h1&gt;
+    &lt;/header&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+
+<span class="c1">.site {</span>
+  design: <span class="c3">sur-mesure</span>;
+  vitesse: <span class="c3">maximale</span>;
+  mobile: <span class="c3">100%</span>;
+<span class="c1">}</span>
+
+<span class="c2">const</span> livraison = <span class="c3">"24h"</span>;
+<span class="c2">await</span> neyweb.build();
+
+<span class="c1">&lt;!DOCTYPE html&gt;</span>
+&lt;html lang="fr"&gt;
+  &lt;head&gt;
+    &lt;title&gt;<span class="c3">Votre site&lt;/title&gt;</span>
+  &lt;/head&gt;
+  &lt;body&gt;
+    <span class="c2">&lt;header class="hero"&gt;</span>
+      &lt;h1&gt;Bienvenue&lt;/h1&gt;
+    &lt;/header&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+
+<span class="c1">.site {</span>
+  design: <span class="c3">sur-mesure</span>;
+  vitesse: <span class="c3">maximale</span>;
+  mobile: <span class="c3">100%</span>;
+<span class="c1">}</span>
+
+<span class="c2">const</span> livraison = <span class="c3">"24h"</span>;
+<span class="c2">await</span> neyweb.build();
+
+<span class="c1">&lt;!DOCTYPE html&gt;</span>
+&lt;html lang="fr"&gt;
+  &lt;head&gt;
+    &lt;title&gt;<span class="c3">Votre site&lt;/title&gt;</span>
+  &lt;/head&gt;
+  &lt;body&gt;
+    <span class="c2">&lt;header class="hero"&gt;</span>
+      &lt;h1&gt;Bienvenue&lt;/h1&gt;
+    &lt;/header&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+
+<span class="c1">.site {</span>
+  design: <span class="c3">sur-mesure</span>;
+  vitesse: <span class="c3">maximale</span>;
+  mobile: <span class="c3">100%</span>;
+<span class="c1">}</span>
+
+<span class="c2">const</span> livraison = <span class="c3">"24h"</span>;
+<span class="c2">await</span> neyweb.build();
+
+<span class="c1">&lt;!DOCTYPE html&gt;</span>
+&lt;html lang="fr"&gt;
+  &lt;head&gt;
+    &lt;title&gt;<span class="c3">Votre site&lt;/title&gt;</span>
+  &lt;/head&gt;
+  &lt;body&gt;
+    <span class="c2">&lt;header class="hero"&gt;</span>
+      &lt;h1&gt;Bienvenue&lt;/h1&gt;
+    &lt;/header&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+
+<span class="c1">.site {</span>
+  design: <span class="c3">sur-mesure</span>;
+  vitesse: <span class="c3">maximale</span>;
+  mobile: <span class="c3">100%</span>;
+<span class="c1">}</span>
+
+<span class="c2">const</span> livraison = <span class="c3">"24h"</span>;
+<span class="c2">await</span> neyweb.build();
+
+<span class="c1">&lt;!DOCTYPE html&gt;</span>
+&lt;html lang="fr"&gt;
+  &lt;head&gt;
+    &lt;title&gt;<span class="c3">Votre site&lt;/title&gt;</span>
+  &lt;/head&gt;
+  &lt;body&gt;
+    <span class="c2">&lt;header class="hero"&gt;</span>
+      &lt;h1&gt;Bienvenue&lt;/h1&gt;
+    &lt;/header&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+
+<span class="c1">.site {</span>
+  design: <span class="c3">sur-mesure</span>;
+  vitesse: <span class="c3">maximale</span>;
+  mobile: <span class="c3">100%</span>;
+<span class="c1">}</span>
+
+<span class="c2">const</span> livraison = <span class="c3">"24h"</span>;
+<span class="c2">await</span> neyweb.build();
+
+<span class="c1">&lt;!DOCTYPE html&gt;</span>
+&lt;html lang="fr"&gt;
+  &lt;head&gt;
+    &lt;title&gt;<span class="c3">Votre site&lt;/title&gt;</span>
+  &lt;/head&gt;
+  &lt;body&gt;
+    <span class="c2">&lt;header class="hero"&gt;</span>
+      &lt;h1&gt;Bienvenue&lt;/h1&gt;
+    &lt;/header&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+
+<span class="c1">.site {</span>
+  design: <span class="c3">sur-mesure</span>;
+  vitesse: <span class="c3">maximale</span>;
+  mobile: <span class="c3">100%</span>;
+<span class="c1">}</span>
+
+<span class="c2">const</span> livraison = <span class="c3">"24h"</span>;
+<span class="c2">await</span> neyweb.build();
+
+</div>
+    <div class="code-col code-col-r">
+<span class="c2">function</span> <span class="c1">creerSite</span>(client) {
+  <span class="c2">const</span> brief = ecouter(client);
+  <span class="c2">const</span> design = surMesure(brief);
+  <span class="c2">return</span> enLigne(design, <span class="c3">"24h"</span>);
+}
+
+<span class="c1">@media</span> (max-width: 560px) {
+  .site { parfait: <span class="c3">aussi</span>; }
+}
+
+seo.optimiser(<span class="c3">"Google"</span>);
+form.envoyer(<span class="c3">"direct"</span>);
+client.satisfait = <span class="c2">true</span>;
+
+<span class="c2">function</span> <span class="c1">creerSite</span>(client) {
+  <span class="c2">const</span> brief = ecouter(client);
+  <span class="c2">const</span> design = surMesure(brief);
+  <span class="c2">return</span> enLigne(design, <span class="c3">"24h"</span>);
+}
+
+<span class="c1">@media</span> (max-width: 560px) {
+  .site { parfait: <span class="c3">aussi</span>; }
+}
+
+seo.optimiser(<span class="c3">"Google"</span>);
+form.envoyer(<span class="c3">"direct"</span>);
+client.satisfait = <span class="c2">true</span>;
+
+<span class="c2">function</span> <span class="c1">creerSite</span>(client) {
+  <span class="c2">const</span> brief = ecouter(client);
+  <span class="c2">const</span> design = surMesure(brief);
+  <span class="c2">return</span> enLigne(design, <span class="c3">"24h"</span>);
+}
+
+<span class="c1">@media</span> (max-width: 560px) {
+  .site { parfait: <span class="c3">aussi</span>; }
+}
+
+seo.optimiser(<span class="c3">"Google"</span>);
+form.envoyer(<span class="c3">"direct"</span>);
+client.satisfait = <span class="c2">true</span>;
+
+<span class="c2">function</span> <span class="c1">creerSite</span>(client) {
+  <span class="c2">const</span> brief = ecouter(client);
+  <span class="c2">const</span> design = surMesure(brief);
+  <span class="c2">return</span> enLigne(design, <span class="c3">"24h"</span>);
+}
+
+<span class="c1">@media</span> (max-width: 560px) {
+  .site { parfait: <span class="c3">aussi</span>; }
+}
+
+seo.optimiser(<span class="c3">"Google"</span>);
+form.envoyer(<span class="c3">"direct"</span>);
+client.satisfait = <span class="c2">true</span>;
+
+<span class="c2">function</span> <span class="c1">creerSite</span>(client) {
+  <span class="c2">const</span> brief = ecouter(client);
+  <span class="c2">const</span> design = surMesure(brief);
+  <span class="c2">return</span> enLigne(design, <span class="c3">"24h"</span>);
+}
+
+<span class="c1">@media</span> (max-width: 560px) {
+  .site { parfait: <span class="c3">aussi</span>; }
+}
+
+seo.optimiser(<span class="c3">"Google"</span>);
+form.envoyer(<span class="c3">"direct"</span>);
+client.satisfait = <span class="c2">true</span>;
+
+<span class="c2">function</span> <span class="c1">creerSite</span>(client) {
+  <span class="c2">const</span> brief = ecouter(client);
+  <span class="c2">const</span> design = surMesure(brief);
+  <span class="c2">return</span> enLigne(design, <span class="c3">"24h"</span>);
+}
+
+<span class="c1">@media</span> (max-width: 560px) {
+  .site { parfait: <span class="c3">aussi</span>; }
+}
+
+seo.optimiser(<span class="c3">"Google"</span>);
+form.envoyer(<span class="c3">"direct"</span>);
+client.satisfait = <span class="c2">true</span>;
+
+</div>
+  </div>
 
   <!-- ================= HEADER ================= -->
   <header class="header">
