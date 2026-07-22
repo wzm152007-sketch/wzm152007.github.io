@@ -196,6 +196,79 @@ h1 em, h2 em { color: var(--yellow); font-weight: 400; }
 .hero-image-wrap img { width: 100%; height: 100%; object-fit: contain; object-position: center; }
 .hero-caption { position: absolute; z-index: 3; right: 22px; bottom: clamp(22px, 5%, 32px); color: var(--white); font-family: var(--display); font-size: 1.06rem; font-weight: 400; letter-spacing: .01em; line-height: 1.28; text-align: right; text-shadow: 0 3px 16px rgba(0,0,0,.95), 0 1px 2px rgba(0,0,0,.9); }
 
+/* ===== Part de pizza 3D décorative (arrière-plan du hero) ===== */
+.pizza-stage {
+  position: absolute;
+  z-index: 1;
+  left: clamp(-70px, 3vw, 40px);
+  bottom: clamp(-40px, 4vw, 60px);
+  width: clamp(190px, 24vw, 300px);
+  aspect-ratio: 240 / 320;
+  perspective: 1100px;
+  opacity: .55;
+  pointer-events: none;
+  filter: drop-shadow(0 26px 40px rgba(0, 0, 0, .45));
+}
+.pizza-3d {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transform: rotateX(-18deg) rotateY(0deg);
+  animation: pizza-spin 22s linear infinite;
+}
+@keyframes pizza-spin {
+  to { transform: rotateX(-18deg) rotateY(360deg); }
+}
+.pizza-face, .pizza-side { position: absolute; backface-visibility: visible; }
+/* Faces triangulaires : dessus (garniture) et dessous (pâte) */
+.pizza-top, .pizza-bottom {
+  width: 100%;
+  height: 100%;
+  clip-path: polygon(50% 100%, 0 0, 100% 0);
+  border-radius: 6px;
+}
+.pizza-top {
+  transform: translateZ(14px);
+  background:
+    radial-gradient(circle at 34% 30%, #b23a1f 0 5.5%, transparent 6%),
+    radial-gradient(circle at 64% 26%, #b23a1f 0 5%, transparent 5.5%),
+    radial-gradient(circle at 50% 52%, #b23a1f 0 5%, transparent 5.5%),
+    radial-gradient(circle at 40% 68%, #9e3417 0 4%, transparent 4.5%),
+    radial-gradient(circle at 58% 44%, #2f7d32 0 3%, transparent 3.5%),
+    radial-gradient(circle at 44% 40%, #2f7d32 0 2.6%, transparent 3.1%),
+    linear-gradient(to bottom, #c9822f 0 11%, #f2c94a 11% 22%, #f5cf5e 100%);
+}
+.pizza-bottom {
+  transform: translateZ(-14px);
+  background: linear-gradient(to bottom, #b9762f 0 12%, #e0a862 12%, #d69a52 100%);
+}
+/* Épaisseur : les trois parois de la tranche */
+.pizza-side { top: 0; left: 0; height: 28px; }
+.pizza-crust {
+  width: 100%;
+  transform: translateY(-14px) rotateX(90deg);
+  background: linear-gradient(to bottom, #d98b34, #8a4b1e);
+  border-radius: 8px 8px 0 0;
+}
+.pizza-left {
+  width: 341.76px;
+  transform: translate(-110.88px, 146px) rotateZ(69.44deg) rotateX(90deg);
+  transform-origin: center;
+  background: linear-gradient(to bottom, #e7b25f, #9a5b28);
+}
+.pizza-right {
+  width: 341.76px;
+  transform: translate(9.12px, 146px) rotateZ(110.56deg) rotateX(90deg);
+  transform-origin: center;
+  background: linear-gradient(to bottom, #cf9646, #7d461f);
+}
+@media (max-width: 900px) {
+  .pizza-stage { opacity: .4; left: -40px; bottom: -30px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pizza-3d { animation: none; transform: rotateX(-18deg) rotateY(-24deg); }
+}
+
 .section { padding: clamp(85px, 10vw, 155px) clamp(24px, 8vw, 130px); }
 .story { display: grid; grid-template-columns: minmax(360px, .95fr) minmax(360px, 1.05fr); gap: clamp(55px, 9vw, 145px); align-items: center; }
 .story-image { position: relative; }
@@ -696,6 +769,16 @@ h2 { font-size: clamp(3.25rem, 5.8vw, 6.3rem); }
 
   <main id="main">
     <section class="hero" id="accueil" aria-labelledby="hero-title">
+      <div class="pizza-stage" aria-hidden="true">
+        <div class="pizza-3d">
+          <div class="pizza-face pizza-top"></div>
+          <div class="pizza-face pizza-bottom"></div>
+          <div class="pizza-side pizza-crust"></div>
+          <div class="pizza-side pizza-left"></div>
+          <div class="pizza-side pizza-right"></div>
+        </div>
+      </div>
+
       <div class="hero-copy hero-enter">
         <p class="eyebrow"><span></span> Pizzas artisanales · Terrasse</p>
         <h1 id="hero-title">Montez.<br><em>Savourez.</em><br>Revenez.</h1>
