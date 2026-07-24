@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Le Garde à Manger — Restaurant bistrot</title>
+<meta name="description" content="Le Garde à Manger — cuisine bistrot maison, produits frais et desserts faits maison. Réservez votre table.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1c1a17;
+    --cream:#f6f1e7;
+    --paper:#fbf8f1;
+    --olive:#5a6b4a;
+    --terracotta:#b5623c;
+    --gold:#a98b52;
+    --muted:#7c756a;
+    --line:rgba(28,26,23,0.12);
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Jost',sans-serif;
+    font-weight:300;
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,.serif{font-family:'Cormorant Garamond',serif;font-weight:500;}
+  img{max-width:100%;display:block;}
+  a{color:inherit;text-decoration:none;}
+  .wrap{max-width:1160px;margin:0 auto;padding:0 24px;}
+  .eyebrow{
+    font-size:.72rem;letter-spacing:.32em;text-transform:uppercase;
+    color:var(--terracotta);font-weight:500;margin-bottom:18px;
+  }
+
+  /* NAV */
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:50;
+    display:flex;justify-content:space-between;align-items:center;
+    padding:18px 32px;
+    background:rgba(251,248,241,0.85);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid transparent;
+    transition:border-color .3s,padding .3s;
+  }
+  nav.scrolled{border-color:var(--line);padding:12px 32px;}
+  .brand{font-family:'Cormorant Garamond',serif;font-size:1.5rem;letter-spacing:.04em;font-weight:600;}
+  .brand span{color:var(--terracotta);}
+  .nav-links{display:flex;gap:34px;align-items:center;list-style:none;}
+  .nav-links a{
+    font-size:.76rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);
+    transition:color .2s;position:relative;
+  }
+  .nav-links a:hover{color:var(--ink);}
+  .nav-book{
+    border:1px solid var(--ink);padding:10px 22px;border-radius:2px;
+    font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink);
+    transition:background .25s,color .25s;
+  }
+  .nav-book:hover{background:var(--ink);color:var(--cream);}
+  .nav-toggle{display:none;background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--ink);}
+
+  /* HERO */
+  .hero{
+    position:relative;min-height:100vh;display:flex;align-items:center;
+    background:
+      linear-gradient(rgba(20,18,15,0.55),rgba(20,18,15,0.35)),
+      url('img/salle.jpeg') center/cover no-repeat;
+    color:var(--cream);
+  }
+  .hero-inner{max-width:760px;margin:0 auto;text-align:center;padding:120px 24px 80px;}
+  .hero .eyebrow{color:#e8c9a0;}
+  .hero h1{
+    font-size:clamp(3.2rem,9vw,6.2rem);line-height:.98;letter-spacing:.01em;
+    color:var(--cream);margin-bottom:22px;
+  }
+  .hero h1 em{font-style:italic;color:#e8c9a0;}
+  .hero p{
+    font-size:1.05rem;font-weight:300;max-width:520px;margin:0 auto 40px;
+    color:rgba(246,241,231,0.92);
+  }
+  .hero-actions{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;}
+  .btn{
+    display:inline-block;padding:15px 34px;border-radius:2px;
+    font-size:.76rem;letter-spacing:.18em;text-transform:uppercase;font-weight:500;
+    transition:transform .18s,background .25s,color .25s;cursor:pointer;
+  }
+  .btn:hover{transform:translateY(-2px);}
+  .btn-primary{background:var(--terracotta);color:#fff;border:1px solid var(--terracotta);}
+  .btn-primary:hover{background:#9c4f2e;}
+  .btn-ghost{background:transparent;color:var(--cream);border:1px solid rgba(246,241,231,0.55);}
+  .btn-ghost:hover{background:rgba(246,241,231,0.12);}
+  .scroll-cue{
+    position:absolute;bottom:26px;left:50%;transform:translateX(-50%);
+    font-size:.66rem;letter-spacing:.28em;text-transform:uppercase;color:rgba(246,241,231,0.75);
+  }
+
+  /* SECTION BASICS */
+  section{padding:110px 0;}
+  .section-head{text-align:center;max-width:640px;margin:0 auto 64px;}
+  .section-head h2{font-size:clamp(2.4rem,5vw,3.6rem);line-height:1.05;margin-bottom:16px;}
+  .section-head p{color:var(--muted);font-size:1.02rem;}
+
+  /* INTRO / ABOUT */
+  .about{background:var(--cream);}
+  .about-grid{display:grid;grid-template-columns:1.05fr 1fr;gap:70px;align-items:center;}
+  .about-copy h2{font-size:clamp(2.2rem,4.5vw,3.4rem);line-height:1.06;margin-bottom:24px;}
+  .about-copy p{color:var(--muted);margin-bottom:18px;font-size:1.02rem;}
+  .about-copy .signature{
+    font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.5rem;
+    color:var(--olive);margin-top:8px;
+  }
+  .about-media{position:relative;}
+  .about-media img{
+    width:100%;height:520px;object-fit:cover;border-radius:3px;
+    box-shadow:0 30px 60px rgba(28,26,23,0.18);
+  }
+  .about-media .badge{
+    position:absolute;bottom:-26px;left:-26px;background:var(--terracotta);color:#fff;
+    padding:22px 26px;border-radius:3px;text-align:center;box-shadow:0 16px 30px rgba(0,0,0,.2);
+  }
+  .about-media .badge .num{font-family:'Cormorant Garamond',serif;font-size:2.2rem;line-height:1;}
+  .about-media .badge .lbl{font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;margin-top:6px;}
+
+  /* VALUES */
+  .values{background:var(--paper);}
+  .values-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;}
+  .value{text-align:center;padding:0 12px;}
+  .value .ico{font-size:1.8rem;margin-bottom:14px;}
+  .value h3{font-size:1.5rem;margin-bottom:10px;}
+  .value p{color:var(--muted);font-size:.95rem;}
+
+  /* MENU */
+  .menu{background:var(--ink);color:var(--cream);}
+  .menu .section-head h2{color:var(--cream);}
+  .menu .section-head p{color:rgba(246,241,231,0.7);}
+  .menu .eyebrow{color:#e8c9a0;}
+  .menu-cats{display:grid;grid-template-columns:1fr 1fr;gap:56px 72px;}
+  .menu-cat h3{
+    font-size:1.9rem;color:#e8c9a0;margin-bottom:24px;padding-bottom:12px;
+    border-bottom:1px solid rgba(246,241,231,0.16);letter-spacing:.02em;
+  }
+  .dish{display:flex;justify-content:space-between;gap:18px;margin-bottom:22px;align-items:baseline;}
+  .dish-name{font-size:1.18rem;font-family:'Cormorant Garamond',serif;font-weight:500;}
+  .dish-desc{font-size:.85rem;color:rgba(246,241,231,0.6);margin-top:2px;max-width:340px;}
+  .dish-dots{flex:1;border-bottom:1px dotted rgba(246,241,231,0.3);transform:translateY(-4px);min-width:20px;}
+  .dish-price{font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:#e8c9a0;white-space:nowrap;}
+  .menu-note{text-align:center;margin-top:52px;font-size:.85rem;color:rgba(246,241,231,0.55);letter-spacing:.04em;}
+
+  /* GALLERY */
+  .gallery{background:var(--cream);}
+  .gal-grid{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:200px;gap:14px;}
+  .gal-grid figure{overflow:hidden;border-radius:3px;position:relative;}
+  .gal-grid img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease;}
+  .gal-grid figure:hover img{transform:scale(1.06);}
+  .gal-grid figcaption{
+    position:absolute;left:0;right:0;bottom:0;padding:14px 16px 12px;
+    background:linear-gradient(transparent,rgba(20,18,15,0.78));
+    color:#fff;font-size:.78rem;letter-spacing:.06em;
+    opacity:0;transform:translateY(8px);transition:opacity .3s,transform .3s;
+  }
+  .gal-grid figure:hover figcaption{opacity:1;transform:translateY(0);}
+  .gal-a{grid-column:span 2;grid-row:span 2;}
+  .gal-b{grid-column:span 2;}
+
+  /* VISIT / MAP */
+  .visit{background:var(--paper);}
+  .visit-grid{display:grid;grid-template-columns:1fr 1.1fr;gap:56px;align-items:stretch;}
+  .visit-info h2{font-size:clamp(2.2rem,4.5vw,3.2rem);margin-bottom:26px;}
+  .info-row{display:flex;gap:16px;margin-bottom:22px;align-items:flex-start;}
+  .info-row .ico{font-size:1.15rem;color:var(--terracotta);margin-top:2px;}
+  .info-row .lbl{font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:2px;}
+  .info-row .val{font-size:1.05rem;}
+  .visit-actions{display:flex;gap:14px;flex-wrap:wrap;margin-top:30px;}
+  .btn-dark{background:var(--ink);color:var(--cream);border:1px solid var(--ink);}
+  .btn-dark:hover{background:#000;}
+  .btn-outline{background:transparent;color:var(--ink);border:1px solid var(--ink);}
+  .btn-outline:hover{background:var(--ink);color:var(--cream);}
+  .map-wrap{min-height:420px;border-radius:3px;overflow:hidden;box-shadow:0 20px 40px rgba(28,26,23,0.14);}
+  .map-wrap iframe{width:100%;height:100%;min-height:420px;border:0;filter:grayscale(0.15);}
+
+  /* FOOTER */
+  footer{background:var(--ink);color:rgba(246,241,231,0.8);padding:70px 0 34px;}
+  .foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:40px;margin-bottom:50px;}
+  .foot-brand{font-family:'Cormorant Garamond',serif;font-size:1.9rem;font-weight:600;color:var(--cream);margin-bottom:14px;}
+  .foot-brand span{color:var(--terracotta);}
+  .foot-col h4{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:#e8c9a0;margin-bottom:16px;font-family:'Jost',sans-serif;font-weight:500;}
+  .foot-col p,.foot-col a{font-size:.92rem;color:rgba(246,241,231,0.72);display:block;margin-bottom:8px;}
+  .foot-col a:hover{color:var(--cream);}
+  .foot-bottom{
+    border-top:1px solid rgba(246,241,231,0.14);padding-top:24px;
+    display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;
+    font-size:.78rem;color:rgba(246,241,231,0.5);letter-spacing:.05em;
+  }
+
+  /* REVEAL */
+  .reveal{opacity:0;transform:translateY(28px);transition:opacity .8s ease,transform .8s ease;}
+  .reveal.in{opacity:1;transform:translateY(0);}
+
+  /* RESPONSIVE */
+  @media(max-width:900px){
+    .nav-links{
+      position:fixed;top:0;right:0;height:100vh;width:min(78vw,320px);
+      flex-direction:column;justify-content:center;gap:28px;
+      background:var(--ink);color:var(--cream);
+      transform:translateX(100%);transition:transform .35s ease;padding:40px;
+    }
+    .nav-links.open{transform:translateX(0);}
+    .nav-links a{color:var(--cream);font-size:.9rem;}
+    .nav-links .nav-book{border-color:var(--cream);color:var(--cream);}
+    .nav-toggle{display:block;z-index:60;}
+    .about-grid,.visit-grid{grid-template-columns:1fr;gap:48px;}
+    .about-media .badge{left:0;}
+    .values-grid{grid-template-columns:1fr;gap:44px;}
+    .menu-cats{grid-template-columns:1fr;gap:44px;}
+    .gal-grid{grid-template-columns:1fr 1fr;grid-auto-rows:180px;}
+    .gal-a{grid-column:span 2;grid-row:span 1;}
+  }
+  @media(max-width:520px){
+    section{padding:80px 0;}
+    .hero-inner{padding:110px 20px 70px;}
+    .gal-grid{grid-template-columns:1fr;}
+    .gal-a,.gal-b{grid-column:span 1;}
+    .foot-grid{grid-template-columns:1fr;gap:32px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#home" class="brand">Le Garde<span>&nbsp;à&nbsp;</span>Manger</a>
+  <button class="nav-toggle" id="navToggle" aria-label="Menu">☰</button>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#about">La maison</a></li>
+    <li><a href="#menu">La carte</a></li>
+    <li><a href="#gallery">Galerie</a></li>
+    <li><a href="#visit">Nous trouver</a></li>
+    <li><a href="#visit" class="nav-book">Réserver</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<header class="hero" id="home">
+  <div class="hero-inner">
+    <p class="eyebrow">Bistrot &middot; Cuisine maison</p>
+    <h1>Le Garde<br><em>à Manger</em></h1>
+    <p>Une cuisine de bistrot généreuse, des produits frais et de saison, et des desserts faits maison — dans une salle chaleureuse pensée comme à la maison.</p>
+    <div class="hero-actions">
+      <a href="#visit" class="btn btn-primary">Réserver une table</a>
+      <a href="#menu" class="btn btn-ghost">Découvrir la carte</a>
+    </div>
+  </div>
+  <div class="scroll-cue">Défiler ↓</div>
+</header>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="wrap about-grid">
+    <div class="about-copy reveal">
+      <p class="eyebrow">La maison</p>
+      <h2>Le goût du vrai, l'esprit d'un bistrot</h2>
+      <p>Au Garde à Manger, tout part du produit. Chaque assiette est préparée sur place, à partir d'ingrédients frais et de saison, dans la tradition d'une cuisine de bistrot sincère et généreuse.</p>
+      <p>Sous un mur végétal fleuri, entre briques et lumière tamisée, on vient ici pour le déjeuner entre collègues, le dîner à deux ou un moment gourmand entre amis. Une adresse simple, soignée, où l'on se sent bien.</p>
+      <p class="signature">« Bien manger, tout simplement. »</p>
+    </div>
+    <div class="about-media reveal">
+      <img src="img/salle.jpeg" alt="La salle du restaurant Le Garde à Manger">
+      <div class="badge">
+        <div class="num">100%</div>
+        <div class="lbl">Fait maison</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VALUES -->
+<section class="values">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <p class="eyebrow">Notre promesse</p>
+      <h2>Ce qui compte pour nous</h2>
+    </div>
+    <div class="values-grid">
+      <div class="value reveal">
+        <div class="ico">🌿</div>
+        <h3>Produits frais</h3>
+        <p>Des ingrédients de saison sélectionnés avec soin, pour une carte qui évolue au fil des arrivages.</p>
+      </div>
+      <div class="value reveal">
+        <div class="ico">👨‍🍳</div>
+        <h3>Fait maison</h3>
+        <p>Des plats et des desserts préparés sur place, chaque jour, dans notre cuisine.</p>
+      </div>
+      <div class="value reveal">
+        <div class="ico">🕯️</div>
+        <h3>Ambiance chaleureuse</h3>
+        <p>Une salle cosy et conviviale, pour un déjeuner rapide comme pour un dîner qui s'étire.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MENU -->
+<section class="menu" id="menu">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <p class="eyebrow">La carte</p>
+      <h2>Quelques suggestions</h2>
+      <p>Une sélection de nos plats du moment. La carte change au fil des saisons et des produits.</p>
+    </div>
+    <div class="menu-cats">
+      <div class="menu-cat reveal">
+        <h3>Entrées &amp; Plats</h3>
+        <div class="dish">
+          <div>
+            <div class="dish-name">Quiche aux épinards</div>
+            <div class="dish-desc">Pâte maison, épinards frais, tomate confite, salade de jeunes pousses.</div>
+          </div>
+          <span class="dish-dots"></span>
+          <span class="dish-price">—</span>
+        </div>
+        <div class="dish">
+          <div>
+            <div class="dish-name">Escalope sauce forestière</div>
+            <div class="dish-desc">Sauce crémeuse aux champignons, spätzle poêlés maison.</div>
+          </div>
+          <span class="dish-dots"></span>
+          <span class="dish-price">—</span>
+        </div>
+        <div class="dish">
+          <div>
+            <div class="dish-name">Suggestion du jour</div>
+            <div class="dish-desc">Le plat du chef, au gré du marché. Demandez à votre serveur.</div>
+          </div>
+          <span class="dish-dots"></span>
+          <span class="dish-price">—</span>
+        </div>
+      </div>
+      <div class="menu-cat reveal">
+        <h3>Desserts</h3>
+        <div class="dish">
+          <div>
+            <div class="dish-name">Pavlova aux fruits rouges</div>
+            <div class="dish-desc">Meringue croustillante, crème onctueuse, fruits rouges frais.</div>
+          </div>
+          <span class="dish-dots"></span>
+          <span class="dish-price">—</span>
+        </div>
+        <div class="dish">
+          <div>
+            <div class="dish-name">Nougat glacé</div>
+            <div class="dish-desc">Fruits secs, coulis et fruits rouges de saison.</div>
+          </div>
+          <span class="dish-dots"></span>
+          <span class="dish-price">—</span>
+        </div>
+        <div class="dish">
+          <div>
+            <div class="dish-name">Café gourmand</div>
+            <div class="dish-desc">Un café accompagné d'un assortiment de mignardises maison.</div>
+          </div>
+          <span class="dish-dots"></span>
+          <span class="dish-price">—</span>
+        </div>
+      </div>
+    </div>
+    <p class="menu-note">Carte non exhaustive &middot; prix et plats à confirmer par le restaurant.</p>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section class="gallery" id="gallery">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <p class="eyebrow">Galerie</p>
+      <h2>En images</h2>
+      <p>Un aperçu de la salle et de quelques assiettes.</p>
+    </div>
+    <div class="gal-grid reveal">
+      <figure class="gal-a">
+        <img src="img/salle.jpeg" alt="La salle du restaurant">
+        <figcaption>La salle &amp; son mur végétal</figcaption>
+      </figure>
+      <figure>
+        <img src="img/escalope-forestiere.jpeg" alt="Escalope sauce forestière et spätzle">
+        <figcaption>Escalope forestière</figcaption>
+      </figure>
+      <figure>
+        <img src="img/quiche-epinards.jpeg" alt="Quiche aux épinards et salade">
+        <figcaption>Quiche aux épinards</figcaption>
+      </figure>
+      <figure class="gal-b">
+        <img src="img/pavlova.jpeg" alt="Pavlova aux fruits rouges">
+        <figcaption>Pavlova aux fruits rouges</figcaption>
+      </figure>
+      <figure class="gal-b">
+        <img src="img/nougat-glace.jpeg" alt="Nougat glacé aux fruits rouges">
+        <figcaption>Nougat glacé</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- VISIT / MAP -->
+<section class="visit" id="visit">
+  <div class="wrap visit-grid">
+    <div class="visit-info reveal">
+      <p class="eyebrow">Nous trouver</p>
+      <h2>Réserver &amp; nous rendre visite</h2>
+      <div class="info-row">
+        <span class="ico">📍</span>
+        <div>
+          <div class="lbl">Adresse</div>
+          <div class="val">À compléter — votre adresse ici</div>
+        </div>
+      </div>
+      <div class="info-row">
+        <span class="ico">📞</span>
+        <div>
+          <div class="lbl">Réservations</div>
+          <div class="val">À compléter — votre téléphone</div>
+        </div>
+      </div>
+      <div class="info-row">
+        <span class="ico">🕒</span>
+        <div>
+          <div class="lbl">Horaires</div>
+          <div class="val">À compléter — jours &amp; heures d'ouverture</div>
+        </div>
+      </div>
+      <div class="visit-actions">
+        <a href="https://maps.app.goo.gl/X7Vet6XdFFG8Btec9" target="_blank" rel="noopener" class="btn btn-dark">Voir sur Google Maps</a>
+        <a href="https://maps.app.goo.gl/X7Vet6XdFFG8Btec9" target="_blank" rel="noopener" class="btn btn-outline">Avis &amp; photos Google</a>
+      </div>
+    </div>
+    <div class="map-wrap reveal">
+      <iframe
+        src="https://www.google.com/maps?q=Le+Garde+%C3%A0+Manger+restaurant&output=embed"
+        loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+        title="Carte — Le Garde à Manger"></iframe>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="foot-brand">Le Garde<span> à </span>Manger</div>
+        <p>Cuisine de bistrot maison, produits frais et desserts faits maison. Une adresse chaleureuse pour tous vos repas.</p>
+      </div>
+      <div class="foot-col">
+        <h4>Navigation</h4>
+        <a href="#about">La maison</a>
+        <a href="#menu">La carte</a>
+        <a href="#gallery">Galerie</a>
+        <a href="#visit">Nous trouver</a>
+      </div>
+      <div class="foot-col">
+        <h4>Contact</h4>
+        <a href="https://maps.app.goo.gl/X7Vet6XdFFG8Btec9" target="_blank" rel="noopener">Google Maps</a>
+        <p>Adresse à compléter</p>
+        <p>Téléphone à compléter</p>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© <span id="year"></span> Le Garde à Manger — Tous droits réservés</span>
+      <span>Photos © Le Garde à Manger</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Nav scroll state
+  const nav=document.getElementById('nav');
+  window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',window.scrollY>40));
+
+  // Mobile menu
+  const toggle=document.getElementById('navToggle');
+  const links=document.getElementById('navLinks');
+  toggle.addEventListener('click',()=>links.classList.toggle('open'));
+  links.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>links.classList.remove('open')));
+
+  // Reveal on scroll
+  const io=new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});
+  },{threshold:0.12});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  // Year
+  document.getElementById('year').textContent=new Date().getFullYear();
+</script>
+</body>
+</html>
