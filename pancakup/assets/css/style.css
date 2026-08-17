@@ -432,7 +432,17 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 .zone-go{ margin-top:.9rem; }
 .zone-note{ margin-top:1rem; font-size:.86rem; color:var(--muted-2); }
 
-/* Radar */
+/* Carte Google */
+.zone-map{
+  width:100%; aspect-ratio:1/.9; min-height:320px;
+  border:1px solid var(--line-strong); border-radius:var(--radius-lg);
+  overflow:hidden; box-shadow:var(--shadow); background:var(--black);
+}
+/* Habillage des contrôles Google pour rester dans la charte */
+.zone-map .gm-style-cc, .zone-map .gmnoprint a{ opacity:.55; }
+.zone-map img{ max-width:none; }
+
+/* Radar (repli sans clé Google) */
 .zone-visual{ display:grid; place-items:center; }
 .radar{
   position:relative; width:min(100%,400px); aspect-ratio:1; display:grid; place-items:center;

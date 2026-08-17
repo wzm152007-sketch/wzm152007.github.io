@@ -38,6 +38,19 @@
     center: { lat: 48.1744, lon: 6.4519 },   // Épinal centre
     radiusKm: 10,
 
+    /* --- Google Maps ---------------------------------------------------
+       Colle ici ta clé Google Maps pour activer l'autocomplétion Google
+       et la carte de la zone de livraison.
+       Console Google Cloud → activer « Maps JavaScript API » ET
+       « Places API (New) », puis restreindre la clé au domaine du site
+       (Restrictions → Sites web → https://wzm152007-sketch.github.io/*).
+       Sans clé, le site bascule tout seul sur la Base Adresse Nationale
+       (gratuite, sans compte) et affiche le schéma de zone.             */
+    googleApiKey: '',
+    geocoder: 'auto',    // 'auto' (Google si clé, sinon BAN) | 'google' | 'ban'
+    showMap: true,       // carte Google dans la section « zone de livraison »
+    mapZoom: 11,
+
     /* --- Horaires de service (heure de Paris) --- */
     openHour: 22,        // ouverture 22h00
     closeHour: 3,        // fermeture 3h00 (le lendemain)
@@ -290,36 +303,191 @@
   };
 
   /* ======================================================================
-     4. Vérification d'adresse (Base Adresse Nationale)
+     4. Vérification d'adresse
+        Fournisseur principal : Google Maps (Places API New + Maps JavaScript).
+        Repli automatique : Base Adresse Nationale (gratuite, sans clé).
      ====================================================================== */
-  var Geo = {
-    /** Recherche d'adresses, priorisée autour d'Épinal. */
-    search: function (query) {
-      var url = CONFIG.geocodeUrl + '?q=' + encodeURIComponent(query) +
-                '&limit=6&autocomplete=1' +
-                '&lat=' + CONFIG.center.lat + '&lon=' + CONFIG.center.lon;
-      return fetch(url, { headers: { Accept: 'application/json' } })
-        .then(function (r) {
-          if (!r.ok) throw new Error('http ' + r.status);
-          return r.json();
-        })
-        .then(function (data) {
-          return (data.features || []).map(function (f) {
-            var c = f.geometry.coordinates;   // [lon, lat]
-            var p = f.properties;
+
+  /** Chargement à la demande du script Google Maps. */
+  var GoogleMaps = {
+    _loading: null,
+
+    /** Une clé est-elle configurée (ou le script déjà chargé à la main) ? */
+    available: function () {
+      return !!CONFIG.googleApiKey || !!(window.google && window.google.maps);
+    },
+
+    load: function () {
+      if (this._loading) return this._loading;
+
+      if (window.google && window.google.maps) {
+        this._loading = Promise.resolve(window.google);
+      } else if (!CONFIG.googleApiKey) {
+        this._loading = Promise.reject(new Error('Clé Google Maps non configurée'));
+      } else {
+        this._loading = new Promise(function (resolve, reject) {
+          var cbName = '__pancakupMapsReady';
+          window[cbName] = function () { resolve(window.google); };
+          var s = document.createElement('script');
+          s.async = true;
+          s.src = 'https://maps.googleapis.com/maps/api/js' +
+                  '?key=' + encodeURIComponent(CONFIG.googleApiKey) +
+                  '&libraries=places,geometry&language=fr&region=FR' +
+                  '&loading=async&callback=' + cbName;
+          s.onerror = function () { reject(new Error('Google Maps injoignable')); };
+          document.head.appendChild(s);
+        });
+      }
+      return this._loading;
+    },
+
+    /** Bibliothèque « places » (API récente). */
+    places: function () {
+      return this.load().then(function (g) {
+        return g.maps.importLibrary ? g.maps.importLibrary('places') : g.maps.places;
+      });
+    }
+  };
+
+  /** Texte d'un champ Places (FormattableText ou chaîne). */
+  function placesText(v) {
+    if (v == null) return '';
+    if (typeof v === 'string') return v;
+    if (v.text != null) return v.text;
+    return String(v);
+  }
+
+  /* Les deux fournisseurs exposent la même interface :
+       search(query)  → Promise<[ suggestion ]>
+       resolve(item)  → Promise<{ label, lat, lon, precise }>
+     La recherche ne renvoie pas toujours les coordonnées (Google les facture
+     séparément) : elles sont récupérées seulement quand le client choisit. */
+  var Providers = {
+
+    /* ---------------------- Google Maps / Places ---------------------- */
+    google: {
+      id: 'google',
+      _token: null,
+
+      search: function (query) {
+        var self = this;
+        return GoogleMaps.places().then(function (places) {
+          if (!places.AutocompleteSuggestion) {
+            throw new Error('Places API (New) indisponible pour cette clé');
+          }
+          if (!self._token) self._token = new places.AutocompleteSessionToken();
+          return places.AutocompleteSuggestion.fetchAutocompleteSuggestions({
+            input: query,
+            language: 'fr',
+            includedRegionCodes: ['fr'],
+            sessionToken: self._token,
+            /* On oriente les résultats autour d'Épinal, sans les y enfermer :
+               une adresse hors zone doit rester trouvable pour être refusée
+               explicitement. */
+            locationBias: {
+              center: { lat: CONFIG.center.lat, lng: CONFIG.center.lon },
+              radius: Math.max(CONFIG.radiusKm * 2000, 20000)
+            }
+          });
+        }).then(function (res) {
+          return (res.suggestions || []).map(function (s) {
+            var p = s.placePrediction;
             return {
-              label: p.label,
-              street: p.name || '',
-              postcode: p.postcode || '',
-              cityName: p.city || '',
-              context: p.context || '',
-              type: p.type,
-              score: p.score,
-              lat: c[1],
-              lon: c[0]
+              provider: self,
+              label: placesText(p.text),
+              primary: placesText(p.mainText) || placesText(p.text),
+              secondary: placesText(p.secondaryText),
+              _prediction: p
             };
           });
         });
+      },
+
+      resolve: function (item) {
+        var self = this;
+        var place = item._prediction.toPlace();
+        return place.fetchFields({
+          fields: ['location', 'formattedAddress', 'types']
+        }).then(function (res) {
+          var pl = (res && res.place) || place;
+          var loc = pl.location;
+          self._token = null;             // la session de facturation se termine ici
+          var types = pl.types || [];
+          return {
+            label: pl.formattedAddress || item.label,
+            lat: typeof loc.lat === 'function' ? loc.lat() : loc.lat,
+            lon: typeof loc.lng === 'function' ? loc.lng() : loc.lng,
+            precise: types.indexOf('street_address') !== -1 ||
+                     types.indexOf('premise') !== -1 ||
+                     types.indexOf('subpremise') !== -1
+          };
+        });
+      }
+    },
+
+    /* -------------------- Base Adresse Nationale ---------------------- */
+    ban: {
+      id: 'ban',
+
+      search: function (query) {
+        var self = this;
+        var url = CONFIG.geocodeUrl + '?q=' + encodeURIComponent(query) +
+                  '&limit=6&autocomplete=1' +
+                  '&lat=' + CONFIG.center.lat + '&lon=' + CONFIG.center.lon;
+        return fetch(url, { headers: { Accept: 'application/json' } })
+          .then(function (r) {
+            if (!r.ok) throw new Error('http ' + r.status);
+            return r.json();
+          })
+          .then(function (data) {
+            return (data.features || []).map(function (f) {
+              var c = f.geometry.coordinates;   // [lon, lat]
+              var p = f.properties;
+              return {
+                provider: self,
+                label: p.label,
+                primary: p.name || p.label,
+                secondary: ((p.postcode || '') + ' ' + (p.city || '')).trim(),
+                lat: c[1],
+                lon: c[0],
+                precise: p.type === 'housenumber'
+              };
+            });
+          });
+      },
+
+      resolve: function (item) {
+        return Promise.resolve({
+          label: item.label, lat: item.lat, lon: item.lon, precise: item.precise
+        });
+      }
+    }
+  };
+
+  var Geo = {
+    /** Fournisseur actif selon CONFIG.geocoder ('auto' | 'google' | 'ban'). */
+    provider: function () {
+      if (CONFIG.geocoder === 'ban') return Providers.ban;
+      if (CONFIG.geocoder === 'google') return Providers.google;
+      return GoogleMaps.available() ? Providers.google : Providers.ban;
+    },
+
+    search: function (query) {
+      var p = this.provider();
+      return p.search(query).catch(function (err) {
+        /* Google indisponible (clé invalide, quota, hors ligne) : en mode
+           'auto' on bascule sur la BAN pour ne jamais bloquer une commande. */
+        if (p.id === 'google' && CONFIG.geocoder !== 'google') {
+          if (window.console) console.warn('Google Maps indisponible, repli sur la BAN :', err.message);
+          return Providers.ban.search(query);
+        }
+        throw err;
+      });
+    },
+
+    /** Récupère les coordonnées de la suggestion choisie. */
+    resolve: function (item) {
+      return (item.provider || this.provider()).resolve(item);
     },
 
     /** Verdict de zone pour une adresse résolue. */
@@ -329,18 +497,114 @@
         distanceKm: d,
         rounded: Math.round(d * 10) / 10,
         inZone: d <= CONFIG.radiusKm,
-        precise: place.type === 'housenumber'
+        precise: !!place.precise
       };
+    }
+  };
+
+  /* ======================================================================
+     4 bis. Carte Google de la zone de livraison
+     ====================================================================== */
+
+  /* Style sombre, aligné sur la charte (noir / or). */
+  var MAP_STYLE = [
+    { elementType: 'geometry', stylers: [{ color: '#17110B' }] },
+    { elementType: 'labels.text.fill', stylers: [{ color: '#9A886F' }] },
+    { elementType: 'labels.text.stroke', stylers: [{ color: '#0B0806' }] },
+    { featureType: 'poi', stylers: [{ visibility: 'off' }] },
+    { featureType: 'transit', stylers: [{ visibility: 'off' }] },
+    { featureType: 'road', elementType: 'geometry', stylers: [{ color: '#241A11' }] },
+    { featureType: 'road.highway', elementType: 'geometry', stylers: [{ color: '#3A2A18' }] },
+    { featureType: 'road', elementType: 'labels.text.fill', stylers: [{ color: '#8A7B63' }] },
+    { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#0B0F14' }] },
+    { featureType: 'landscape.natural', elementType: 'geometry', stylers: [{ color: '#1A130D' }] },
+    { featureType: 'administrative', elementType: 'geometry.stroke', stylers: [{ color: '#3A2A18' }] },
+    { featureType: 'administrative.locality', elementType: 'labels.text.fill', stylers: [{ color: '#C6B49C' }] }
+  ];
+
+  var Map = {
+    map: null, zone: null, pin: null,
+
+    /** Affiche la carte si une clé Google est disponible, sinon garde le schéma CSS. */
+    init: function () {
+      var host = $('#zoneMap');
+      if (!host || !CONFIG.showMap || !GoogleMaps.available()) return;
+      var self = this;
+
+      GoogleMaps.load().then(function (g) {
+        var center = { lat: CONFIG.center.lat, lng: CONFIG.center.lon };
+
+        host.hidden = false;
+        var radar = $('#zoneRadar');
+        if (radar) radar.hidden = true;
+
+        self.map = new g.maps.Map(host, {
+          center: center,
+          zoom: CONFIG.mapZoom,
+          disableDefaultUI: true,
+          zoomControl: true,
+          gestureHandling: 'cooperative',
+          backgroundColor: '#0B0806',
+          styles: MAP_STYLE
+        });
+
+        /* Le rayon de livraison */
+        self.zone = new g.maps.Circle({
+          map: self.map, center: center, radius: CONFIG.radiusKm * 1000,
+          strokeColor: '#E0A94F', strokeOpacity: .95, strokeWeight: 2,
+          fillColor: '#E0A94F', fillOpacity: .12, clickable: false
+        });
+
+        /* Le point « Épinal » */
+        new g.maps.Circle({
+          map: self.map, center: center, radius: 260,
+          strokeColor: '#FFFFFF', strokeWeight: 2,
+          fillColor: '#E0A94F', fillOpacity: 1, clickable: false
+        });
+
+        if (self.zone.getBounds()) self.map.fitBounds(self.zone.getBounds());
+      }).catch(function (err) {
+        if (window.console) console.warn('Carte non affichée :', err.message);
+      });
+    },
+
+    /** Place l'adresse du client sur la carte (vert dans la zone, rouge hors zone). */
+    showAddress: function (place, inZone) {
+      if (!this.map || !window.google) return;
+      var g = window.google;
+      var pos = { lat: place.lat, lng: place.lon };
+
+      if (this.pin) this.pin.setMap(null);
+      this.pin = new g.maps.Circle({
+        map: this.map, center: pos, radius: 200,
+        strokeColor: '#FFFFFF', strokeWeight: 2,
+        fillColor: inZone ? '#57C97E' : '#F0655C', fillOpacity: 1, clickable: false
+      });
+
+      /* On cadre sur la zone + l'adresse : hors zone, le client voit
+         d'un coup d'œil à quelle distance il se trouve. */
+      var bounds = this.zone && this.zone.getBounds()
+        ? new g.maps.LatLngBounds(this.zone.getBounds().getSouthWest(), this.zone.getBounds().getNorthEast())
+        : new g.maps.LatLngBounds();
+      bounds.extend(pos);
+      this.map.fitBounds(bounds, 24);
     }
   };
 
   /* ======================================================================
      5. Champ d'adresse avec autocomplétion
      ====================================================================== */
-  function AddressField(input, list, onPick) {
+  /**
+   * @param handlers {clear, pending, done, error}
+   *   clear()        l'utilisateur retape / efface
+   *   pending()      suggestion choisie, coordonnées en cours de récupération
+   *   done(place)    adresse résolue { label, lat, lon, precise }
+   *   error()        impossible de récupérer les coordonnées
+   */
+  function AddressField(input, list, handlers) {
     this.input = input;
     this.list = list;
-    this.onPick = onPick;
+    this.on = handlers;
     this.items = [];
     this.active = -1;
     this.picked = null;
@@ -365,7 +629,7 @@
     }, 280);
 
     this.input.addEventListener('input', function () {
-      if (self.picked) { self.picked = null; self.onPick(null); }
+      if (self.picked) { self.picked = null; self.on.clear(); }
       run();
     });
 
@@ -399,8 +663,8 @@
         var li = document.createElement('li');
         li.setAttribute('role', 'option');
         li.id = self.list.id + '-opt-' + i;
-        li.innerHTML = '<span>' + escapeHtml(r.street || r.label) + '</span>' +
-                       '<small>' + escapeHtml(r.postcode + ' ' + r.cityName) + '</small>';
+        li.innerHTML = '<span>' + escapeHtml(r.primary) + '</span>' +
+                       '<small>' + escapeHtml(r.secondary) + '</small>';
         li.addEventListener('click', function () { self.pick(r); });
         self.list.appendChild(li);
       });
@@ -420,12 +684,34 @@
     }
   };
 
-  AddressField.prototype.pick = function (place) {
-    if (!place) return;
+  /** Choix d'une suggestion : on résout les coordonnées puis on rend le verdict. */
+  AddressField.prototype.pick = function (item) {
+    if (!item) return;
+    var self = this;
+    this.picked = item;
+    this.input.value = item.label;
+    this.close();
+    this.on.pending();
+
+    Geo.resolve(item).then(function (place) {
+      if (self.picked !== item) return;          // le client a retapé entre-temps
+      self.input.value = place.label;
+      self.resolved = place;
+      self.on.done(place);
+    }).catch(function () {
+      if (self.picked !== item) return;
+      self.picked = null;
+      self.on.error();
+    });
+  };
+
+  /** Réinjecte une adresse déjà résolue (depuis le vérificateur de zone). */
+  AddressField.prototype.setResolved = function (place) {
     this.picked = place;
+    this.resolved = place;
     this.input.value = place.label;
     this.close();
-    this.onPick(place);
+    this.on.done(place);
   };
 
   AddressField.prototype.close = function () {
@@ -542,24 +828,45 @@
 
     var checked = null;   // dernière adresse validée dans le vérificateur
     go.addEventListener('click', function () {
-      if (checked && window.__mainAddressField) window.__mainAddressField.pick(checked);
+      if (checked && window.__mainAddressField) window.__mainAddressField.setResolved(checked);
     });
 
-    new AddressField(input, sug, function (place) {
+    function reset() {
       checked = null;
-      if (!place) { out.textContent = ''; out.className = 'checker-result'; go.hidden = true; return; }
-      var v = Geo.verdict(place);
-      if (v.inZone) {
-        checked = place;
-        out.className = 'checker-result ok';
-        out.textContent = '✓ Tu es dans la zone — environ ' + v.rounded.toFixed(1) +
-                          ' km du centre d\'Épinal. On te livre !';
-        go.hidden = false;
-      } else {
-        out.className = 'checker-result ko';
-        out.textContent = '✕ Hors zone — environ ' + v.rounded.toFixed(1) + ' km du centre d\'Épinal (limite : ' +
-                          CONFIG.radiusKm + ' km). On ne peut pas livrer cette adresse.';
+      out.textContent = '';
+      out.className = 'checker-result';
+      go.hidden = true;
+    }
+
+    new AddressField(input, sug, {
+      clear: reset,
+      pending: function () {
+        checked = null;
         go.hidden = true;
+        out.className = 'checker-result pending';
+        out.textContent = 'Vérification de l\'adresse…';
+      },
+      error: function () {
+        reset();
+        out.className = 'checker-result ko';
+        out.textContent = 'Vérification impossible pour le moment. Réessaie ou contacte-nous sur Snapchat.';
+      },
+      done: function (place) {
+        var v = Geo.verdict(place);
+        Map.showAddress(place, v.inZone);
+        if (v.inZone) {
+          checked = place;
+          out.className = 'checker-result ok';
+          out.textContent = '✓ Tu es dans la zone — environ ' + v.rounded.toFixed(1) +
+                            ' km du centre d\'Épinal. On te livre !';
+          go.hidden = false;
+        } else {
+          checked = null;
+          out.className = 'checker-result ko';
+          out.textContent = '✕ Hors zone — environ ' + v.rounded.toFixed(1) + ' km du centre d\'Épinal (limite : ' +
+                            CONFIG.radiusKm + ' km). On ne peut pas livrer cette adresse.';
+          go.hidden = true;
+        }
       }
     });
   }
@@ -680,30 +987,51 @@
     });
 
     var verdictBox = $('#addrVerdict');
-    window.__mainAddressField = new AddressField($('#fAddr'), $('#fAddrList'), function (place) {
-      if (!place) {
+
+    window.__mainAddressField = new AddressField($('#fAddr'), $('#fAddrList'), {
+      clear: function () {
         order.address = null;
         verdictBox.hidden = true;
         renderSummary();
-        return;
-      }
-      var v = Geo.verdict(place);
-      verdictBox.hidden = false;
-      verdictBox.className = 'zone-verdict ' + (v.inZone ? 'ok' : 'ko');
+      },
 
-      if (v.inZone) {
-        order.address = { place: place, distanceKm: v.distanceKm };
-        setError('fAddr', '');
-        verdictBox.innerHTML = '<span aria-hidden="true">✓</span><span><strong>Adresse dans la zone de livraison</strong>' +
-          '<span class="zv-sub">' + escapeHtml(place.label) + ' — à environ ' + v.rounded.toFixed(1) +
-          ' km du centre d\'Épinal.' + (v.precise ? '' : ' Pense à préciser le numéro de rue dans les précisions.') + '</span></span>';
-      } else {
+      pending: function () {
         order.address = null;
-        verdictBox.innerHTML = '<span aria-hidden="true">✕</span><span><strong>Hors zone de livraison</strong>' +
-          '<span class="zv-sub">' + escapeHtml(place.label) + ' est à environ ' + v.rounded.toFixed(1) +
-          ' km du centre d\'Épinal. On livre uniquement dans un rayon de ' + CONFIG.radiusKm + ' km.</span></span>';
+        verdictBox.hidden = false;
+        verdictBox.className = 'zone-verdict pending';
+        verdictBox.innerHTML = '<span aria-hidden="true">⏳</span><span><strong>Vérification de l\'adresse…</strong></span>';
+        renderSummary();
+      },
+
+      error: function () {
+        order.address = null;
+        verdictBox.hidden = false;
+        verdictBox.className = 'zone-verdict ko';
+        verdictBox.innerHTML = '<span aria-hidden="true">✕</span><span><strong>Vérification impossible</strong>' +
+          '<span class="zv-sub">Réessaie dans un instant, ou envoie-nous ton adresse sur Snapchat.</span></span>';
+        renderSummary();
+      },
+
+      done: function (place) {
+        var v = Geo.verdict(place);
+        verdictBox.hidden = false;
+        verdictBox.className = 'zone-verdict ' + (v.inZone ? 'ok' : 'ko');
+        Map.showAddress(place, v.inZone);
+
+        if (v.inZone) {
+          order.address = { place: place, distanceKm: v.distanceKm };
+          setError('fAddr', '');
+          verdictBox.innerHTML = '<span aria-hidden="true">✓</span><span><strong>Adresse dans la zone de livraison</strong>' +
+            '<span class="zv-sub">' + escapeHtml(place.label) + ' — à environ ' + v.rounded.toFixed(1) +
+            ' km du centre d\'Épinal.' + (v.precise ? '' : ' Pense à préciser le numéro de rue dans les précisions.') + '</span></span>';
+        } else {
+          order.address = null;
+          verdictBox.innerHTML = '<span aria-hidden="true">✕</span><span><strong>Hors zone de livraison</strong>' +
+            '<span class="zv-sub">' + escapeHtml(place.label) + ' est à environ ' + v.rounded.toFixed(1) +
+            ' km du centre d\'Épinal. On livre uniquement dans un rayon de ' + CONFIG.radiusKm + ' km.</span></span>';
+        }
+        renderSummary();
       }
-      renderSummary();
     });
   }
 
@@ -1095,6 +1423,7 @@
   function init() {
     initChrome();
     initZone();
+    Map.init();
     initQuantity();
     initContact();
     initSteps();
@@ -1104,7 +1433,10 @@
   }
 
   /* Exposé pour le réglage / le débogage depuis la console du navigateur. */
-  window.PANCAKUP = { CONFIG: CONFIG, Service: Service, Geo: Geo, distanceKm: distanceKm };
+  window.PANCAKUP = {
+    CONFIG: CONFIG, Service: Service, Geo: Geo, Map: Map,
+    Providers: Providers, GoogleMaps: GoogleMaps, distanceKm: distanceKm
+  };
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);

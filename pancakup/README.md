@@ -8,11 +8,28 @@ publiable tel quel sur GitHub Pages.
 
 ```
 pancakup/
-├── index.html              le site complet
-├── assets/css/style.css    la charte graphique (noir / or / caramel du flyer)
-├── assets/js/app.js        réservation, vérification d'adresse, créneaux
-└── assets/img/             (vide) → à remplir avec tes photos
+├── index.html                  le site complet
+├── assets/css/style.css        la charte graphique (noir / or / caramel du flyer)
+├── assets/js/app.js            réservation, vérification d'adresse, créneaux
+├── assets/img/                 (vide) → à remplir avec tes photos
+├── pancakup-standalone.html    LE MÊME SITE EN UN SEUL FICHIER (voir ci-dessous)
+└── build-standalone.js         régénère le fichier unique
 ```
+
+## Le site en un seul fichier
+
+`pancakup-standalone.html` contient **tout** (HTML + CSS + JavaScript). Tu peux
+l'ouvrir d'un double-clic, l'envoyer par mail, ou le déposer sur n'importe quel
+hébergeur — il fonctionne sans rien d'autre.
+
+Si tu modifies `index.html` ou `assets/`, régénère-le :
+
+```bash
+node build-standalone.js
+```
+
+Pour la mise en ligne sur GitHub Pages, c'est la version en plusieurs fichiers
+(`index.html` + `assets/`) qui est utilisée : elle se met en cache plus finement.
 
 ---
 
@@ -45,11 +62,54 @@ Ouvre `assets/js/app.js`, l'objet `CONFIG` (première section) contient tout :
 | `orderEndpoint` | **réception automatique des commandes** — voir plus bas |
 | `boxPrice`, `maxBoxes` | 15 € et 6 box maximum par réservation |
 | `center`, `radiusKm` | centre d'Épinal et rayon de livraison (10 km) |
+| `googleApiKey` | **ta clé Google Maps** — voir la section ci-dessous |
+| `geocoder` | `'auto'` (Google si clé, sinon repli), `'google'`, ou `'ban'` |
+| `showMap`, `mapZoom` | carte Google dans la section « zone de livraison » |
 | `openHour`, `closeHour` | 22 → 3 |
 | `slotStepMin`, `leadTimeMin` | créneaux de 15 min, 30 min de délai minimum |
 | `openDays`, `serviceStart` | jours de service et date de démarrage |
 | `flavours`, `toppings`, `drinks` | les parfums proposés |
 | `communes` | liste affichée dans « zone de livraison » (filtrée par le rayon) |
+
+### Activer Google Maps (obligatoire pour l'autocomplétion Google)
+
+Le site est prêt pour Google Maps, il ne manque que **ta clé** :
+
+1. Va sur [console.cloud.google.com](https://console.cloud.google.com), crée un
+   projet (ex. « Pancakup ») et **active la facturation** — Google l'exige même
+   pour le palier gratuit.
+2. Dans *API et services → Bibliothèque*, active **les deux** :
+   - **Maps JavaScript API** (la carte)
+   - **Places API (New)** (l'autocomplétion d'adresses)
+3. Dans *Identifiants*, crée une **clé API**, puis **restreins-la** :
+   - *Restrictions relatives aux applications* → **Sites web**, et ajoute
+     `https://wzm152007-sketch.github.io/*`
+   - *Restrictions relatives aux API* → coche uniquement les deux API ci-dessus
+4. Colle la clé dans `assets/js/app.js` :
+
+```js
+googleApiKey: 'AIzaSy...ta-clé...',
+```
+
+La clé est visible dans le code source du site : c'est normal et inévitable pour
+un site statique. **La restriction par domaine de l'étape 3 est ce qui la protège**
+— sans elle, n'importe qui peut l'utiliser et te la facturer. Ne la saute pas.
+
+Une fois la clé en place : l'autocomplétion passe sur Google, et une **vraie carte
+sombre avec le cercle de 10 km** remplace le schéma dans la section « zone de
+livraison ». L'adresse du client s'y affiche en vert (dans la zone) ou en rouge
+(hors zone).
+
+**Coût.** Chaque recherche d'adresse et chaque affichage de carte est facturé
+au-delà du crédit mensuel offert par Google. Le site limite la casse : les
+coordonnées ne sont demandées qu'au moment où le client **choisit** une adresse
+(et non à chaque lettre tapée), avec un jeton de session, ce qui est la
+facturation la plus basse. Si Google devient injoignable (clé invalide, quota
+dépassé, coupure), **le site bascule tout seul sur la Base Adresse Nationale** :
+une commande n'est jamais bloquée.
+
+Pour rester sur la solution gratuite de l'État, laisse `googleApiKey` vide, ou
+force `geocoder: 'ban'`.
 
 ### Recevoir les commandes automatiquement
 
@@ -133,9 +193,13 @@ modifient en une ligne :
 - **Aucun serveur, aucune base de données.** Les réservations sont stockées dans le
   navigateur du client (`localStorage`, 20 dernières) et envoyées soit via
   `orderEndpoint`, soit manuellement par Snapchat/SMS.
-- **Géocodage** : [`api-adresse.data.gouv.fr`](https://adresse.data.gouv.fr) — API
-  publique et gratuite de l'État, sans clé ni quota. Si elle est injoignable,
-  l'autocomplétion affiche un message et invite à passer par Snapchat.
+- **Géocodage** : **Google Places API (New)** dès qu'une clé est configurée
+  (`AutocompleteSuggestion` + `fetchFields`, avec jeton de session), avec repli
+  automatique sur [`api-adresse.data.gouv.fr`](https://adresse.data.gouv.fr) —
+  API publique et gratuite de l'État, sans clé ni quota. Si les deux sont
+  injoignables, l'autocomplétion affiche un message et invite à passer par Snapchat.
+- **Carte** : Maps JavaScript API, style sombre aligné sur la charte, cercle de
+  rayon `radiusKm`. Sans clé, un schéma en CSS prend sa place.
 - **Distance** : formule de haversine à vol d'oiseau depuis le centre d'Épinal
   (48.1744, 6.4519). Ce n'est pas une distance routière : une adresse à 9,8 km à vol
   d'oiseau peut être à 13 km par la route.
@@ -143,5 +207,6 @@ modifient en une ligne :
   client en voyage voit les bons créneaux.
 - Accessibilité : navigation clavier complète (y compris l'autocomplétion), rôles ARIA,
   contrastes conformes, `prefers-reduced-motion` respecté.
-- Testé sur Chromium en 1280 px et 390 px : parcours de réservation complet, cas
-  « hors zone », aucune erreur console, aucun débordement horizontal.
+- Testé sur Chromium en 1280 px et 390 px, sur les deux fournisseurs d'adresses :
+  parcours de réservation complet, cas « hors zone », repli automatique, fichier
+  unique ouvert en `file://` — aucune erreur console, aucun débordement horizontal.
