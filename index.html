@@ -1283,6 +1283,7 @@ import * as THREE from 'three';
 import { GLTFLoader }         from 'three/addons/loaders/GLTFLoader.js';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 import { SimplexNoise }       from 'three/addons/math/SimplexNoise.js';
+import { RoomEnvironment }    from 'three/addons/environments/RoomEnvironment.js';
 
 const host = document.getElementById('scene');
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1296,6 +1297,18 @@ renderer.toneMappingExposure = 1.06;
 host.appendChild(renderer.domElement);
 
 const scene  = new THREE.Scene();
+
+/* Glossy syrup needs something to reflect. The environment is generated, not
+   downloaded — but generating it costs a cubemap render, so it is built after
+   the first frame rather than blocking the initial paint. */
+let envIntensity = 0.55;
+function buildEnvironment() {
+  const pmrem = new THREE.PMREMGenerator(renderer);
+  scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+  scene.environmentIntensity = envIntensity;
+  pmrem.dispose();
+}
+
 const camera = new THREE.PerspectiveCamera(34, innerWidth / innerHeight, 0.1, 200);
 camera.position.set(0, 2.9, 11);
 
@@ -1311,7 +1324,7 @@ const key  = new THREE.DirectionalLight(0xfff2dd, 2.5);
 key.position.set(5.5, 8, 4.5);
 const rim  = new THREE.DirectionalLight(0xb8702f, 1.15);
 rim.position.set(-6, 2.5, -5);
-const fill = new THREE.HemisphereLight(0xf3ede2, 0x6b4a2a, 0.85);
+const fill = new THREE.HemisphereLight(0xf3ede2, 0x6b4a2a, 0.42);
 scene.add(key, rim, fill);
 
 /* ── 1 · the syrup sea — custom shader, simplex-displaced ─────── */
@@ -1406,7 +1419,17 @@ isle.add(stack);
 const loader = new GLTFLoader();
 let stackReady = false;
 
-loader.load('assets/pancake.glb', gltf => {
+/* 2K textures on desktop, a 0.5 MB build on phones and metered connections —
+   the model is identical, only the maps differ */
+const conn = navigator.connection || {};
+const lightBuild =
+  innerWidth < 820 ||
+  conn.saveData === true ||
+  /^(slow-)?2g$|^3g$/.test(conn.effectiveType || '');
+
+const maxAniso = renderer.capabilities.getMaxAnisotropy();
+
+loader.load(lightBuild ? 'assets/pancake-1k.glb' : 'assets/pancake.glb', gltf => {
   const model = gltf.scene;
 
   // normalise: centre on origin, sit on y = 0, fit to a 6-unit footprint
@@ -1422,13 +1445,26 @@ loader.load('assets/pancake.glb', gltf => {
     if (!o.isMesh) return;
     const m = o.material;
     if (m.map) m.map.colorSpace = THREE.SRGBColorSpace;
+
+    // grazing-angle sharpness: without this the 2K maps blur on the pancake tops
+    [m.map, m.normalMap, m.metalnessMap, m.roughnessMap].forEach(tex => {
+      if (!tex) return;
+      tex.anisotropy = maxAniso;
+      tex.generateMipmaps = true;
+      tex.minFilter = THREE.LinearMipmapLinearFilter;
+      tex.needsUpdate = true;
+    });
     if (m.name === 'Honey') {
-      m.roughness = 0.13;
+      m.color.setHex(0xc87a24);      // amber syrup rather than pale beige
+      m.roughness = 0.09;
       m.metalness = 0.0;
-      m.envMapIntensity = 1.4;
+      m.envMapIntensity = 2.6;
+      m.normalScale?.set(0.6, 0.6);
     } else {
-      m.roughness = 0.82;
+      m.roughness = 0.80;
       m.metalness = 0.0;
+      m.envMapIntensity = 0.18;
+      m.normalScale?.set(1.35, 1.35);   // the 2K normal map is what shows the crumb
     }
     m.needsUpdate = true;
   });
@@ -1465,11 +1501,11 @@ for (let i = 0; i < 7; i++) {
 /* ── theme response ───────────────────────────────────────────── */
 const THEMES = {
   light: {
-    key: 2.50, rim: 1.15, hemi: 0.85, exposure: 1.06,
+    key: 2.60, rim: 1.15, hemi: 0.42, exposure: 1.04,
     deep: '#8a5220', shallow: '#e0a755', foam: '#f3ede2', amp: 0.42
   },
   dark: {
-    key: 0.95, rim: 1.55, hemi: 0.30, exposure: 0.92,
+    key: 1.00, rim: 1.55, hemi: 0.16, exposure: 0.92,
     deep: '#221407', shallow: '#8a4d18', foam: '#b8702f', amp: 0.34
   }
 };
@@ -1479,6 +1515,8 @@ function applyTheme(t) {
   gsap.to(rim,  { intensity: c.rim,  duration: 0.62, ease: 'power2.out' });
   gsap.to(fill, { intensity: c.hemi, duration: 0.62, ease: 'power2.out' });
   gsap.to(renderer, { toneMappingExposure: c.exposure, duration: 0.62, ease: 'power2.out' });
+  envIntensity = t === 'dark' ? 0.26 : 0.55;
+  if (scene.environment) gsap.to(scene, { environmentIntensity: envIntensity, duration: 0.62 });
   gsap.to(seaUniforms.uDeep.value,    { ...new THREE.Color(c.deep),    duration: 0.62 });
   gsap.to(seaUniforms.uShallow.value, { ...new THREE.Color(c.shallow), duration: 0.62 });
   gsap.to(seaUniforms.uFoam.value,    { ...new THREE.Color(c.foam),    duration: 0.62 });
@@ -1571,10 +1609,12 @@ function frame() {
   });
 
   renderer.render(scene, camera);
+  if (++frames === 2) buildEnvironment();
   requestAnimationFrame(frame);
 }
+let frames = 0;
 if (!reduced) frame();
-else { seaUniforms.uTime.value = 2.0; renderer.render(scene, camera); }
+else { seaUniforms.uTime.value = 2.0; buildEnvironment(); renderer.render(scene, camera); }
 
 addEventListener('resize', () => {
   layout();
